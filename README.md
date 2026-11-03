@@ -4,6 +4,9 @@ React + TypeScript app built with Vite. React Compiler is enabled.
 
 ## Development
 
+Use Node.js 26 and pnpm 12.9.0, as declared in `package.json`. The Nix development
+shell provides Node.js 26; enter it with `nix develop` if needed.
+
 ```sh
 pnpm install
 pnpm dev
@@ -35,32 +38,59 @@ pnpm exec shadcn add dialog
 
 ## Code quality
 
-| Command             | Purpose                                       |
-| ------------------- | --------------------------------------------- |
-| `pnpm lint`         | Run ESLint; warnings fail the check           |
-| `pnpm lint:fix`     | Apply ESLint fixes                            |
-| `pnpm format`       | Format the project with Prettier              |
-| `pnpm format:check` | Check formatting without writing files        |
-| `pnpm typecheck`    | Check the app and Vite config with TypeScript |
-| `pnpm check`        | Check formatting, lint, and types             |
-| `pnpm check:fix`    | Fix lint and formatting, then check types     |
-| `pnpm build`        | Check types and build for production          |
-| `pnpm preview`      | Preview the production build                  |
+| Command             | Purpose                                          |
+| ------------------- | ------------------------------------------------ |
+| `pnpm lint`         | Run ESLint; warnings fail the check              |
+| `pnpm lint:fix`     | Apply ESLint fixes                               |
+| `pnpm format`       | Format the project with Prettier                 |
+| `pnpm format:check` | Check formatting without writing files           |
+| `pnpm typecheck`    | Check the app and Vite config with TypeScript    |
+| `pnpm knip`         | Find unused files, exports, and dependencies     |
+| `pnpm check`        | Check formatting, lint, types, and unused code   |
+| `pnpm check:fix`    | Fix lint/formatting; check types and unused code |
+| `pnpm build`        | Check types and build for production             |
+| `pnpm preview`      | Preview the production build                     |
 
 Prettier uses single quotes, no semicolons, two-space indentation, trailing commas,
 and LF line endings. EditorConfig keeps editor whitespace settings consistent.
 The Tailwind Prettier plugin sorts utility classes, including `cn` and `cva` calls.
 
-ESLint uses the recommended JavaScript, type-aware TypeScript, React Hooks, and
-Vite React Refresh rules. It also requires braces, strict equality, explicit type
-imports, and no unused variables (prefix intentionally unused bindings with `_`).
+ESLint uses the recommended JavaScript, strict type-aware TypeScript, React Hooks,
+Vite React Refresh, and JSX accessibility rules. It requires braces, strict
+equality, explicit type imports, exhaustive switches, and no unused variables
+(prefix intentionally unused bindings with `_`). Floating and misused promises
+remain errors. Unused lint-disable and inline configuration comments are errors.
+TypeScript explicitly enables strict checking, checked indexed access, and exact
+optional property types in both the app and tooling projects.
+
+Imports are grouped as Node builtins, external packages, `@/` application code,
+relative code, and assets, then alphabetized without case sensitivity. Named
+imports are sorted too. Inline type imports are preferred. ESLint rejects
+duplicate imports, self-imports, and runtime dependency cycles. It preserves
+side-effect import order, including CSS. Shared UI primitives cannot import stores
+or application entry points; stores cannot import UI or application entry points.
+These restrictions resolve paths, so aliases and relative imports are both checked.
+
+Accessibility lint uses `eslint-plugin-jsx-a11y-x`, which supports ESLint 10, and
+recognizes the shared `Button` as a native button. Static checks complement tests
+and manual keyboard checks as application behavior grows.
+
 Prettier handles formatting; `eslint-config-prettier` disables conflicting lint
-rules.
+rules, followed by the compatible mandatory-braces override. Question JSON is
+formatted and checked alongside other supported project files.
+
+Knip follows the Vite app entry and tool configuration to find unused source files,
+exports, and dependencies. Its project scope covers source modules/styles and root
+tooling modules. It has no speculative entry points or unused-dependency exceptions.
+Import `cn` directly from its package; install icon dependencies when UI uses them.
+The utility alias and icon-library setting in `components.json` configure future
+generator output; they do not require an unused utility file or icon dependency.
 
 Before each commit, Husky runs lint-staged. Staged JavaScript and TypeScript files
 run through ESLint with automatic fixes, then Prettier. Other supported staged
 files run through Prettier. Checks that cannot be fixed block the commit.
-Run `pnpm check` for validation of the entire project, including types.
+Run `pnpm check` for validation of the entire project, including types and unused
+code; these project-wide checks run in CI rather than on each staged file.
 
 ## CI
 
@@ -75,7 +105,8 @@ development shell. The lockfile must already be up to date.
 
 The `App checks` job uses Node.js 26 (matching `flake.nix`) and pnpm 12.9.0, caches
 the pnpm store, and installs with a frozen lockfile. It checks formatting, lint,
-types, and the production build in separate steps. Husky hooks are disabled in CI.
+types, unused code/dependencies, and the production build in separate steps. Husky
+hooks are disabled in CI.
 Run the same checks locally with:
 
 ```sh

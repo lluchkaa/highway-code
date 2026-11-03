@@ -68,5 +68,8 @@ jobs:
       - name: Check types
         run: pnpm typecheck
 
+      - name: Check unused code and dependencies
+        run: pnpm knip
+
       - name: Build
         run: pnpm build
