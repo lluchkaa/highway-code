@@ -122,3 +122,16 @@ nix flake check --all-systems --no-update-lock-file
 pnpm check
 pnpm build
 ```
+
+## GitHub Pages
+
+The app is published at <https://lluchkaa.github.io/highway-code/>. GitHub Pages
+uses GitHub Actions as its publishing source. Pushes to `main` and manual runs of
+the `quality` workflow on `main` upload `dist` and deploy it after both `App checks`
+and `Flake check` pass. Pull requests and other branches only run checks.
+
+Vite uses `/highway-code/` as its base path for development, preview, and production.
+Open the URL printed by `pnpm dev` or `pnpm preview`. Reference public assets in
+application code through `import.meta.env.BASE_URL` so they resolve beneath this
+path. If the repository name or hosting domain changes, update `base` in
+`vite.config.ts` to match.
