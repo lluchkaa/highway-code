@@ -4,8 +4,8 @@ React + TypeScript app built with Vite. React Compiler is enabled.
 
 ## Development
 
-Use Node.js 26 and pnpm 12.9.0, as declared in `package.json`. The Nix development
-shell provides Node.js 26; enter it with `nix develop` if needed.
+Use Node.js 26 and the pnpm version pinned by `packageManager` in `package.json`.
+The Nix development shell provides Node.js 26; enter it with `nix develop` if needed.
 
 ```sh
 pnpm install
@@ -14,6 +14,10 @@ pnpm dev
 
 Installing dependencies also installs the Husky Git hooks through the `prepare`
 script.
+
+`pnpm-workspace.yaml` enables strict dependency engine and peer-dependency checks.
+Incompatible package engines and missing or invalid peers fail installation. Keep
+project pnpm policy in this file; an `.npmrc` is not needed for this project.
 
 TypeScript 7 runs builds and type checks through the `@typescript/native` alias.
 The `typescript` alias provides the TypeScript 6 API required by typescript-eslint.
@@ -53,6 +57,9 @@ pnpm exec shadcn add dialog
 
 Prettier uses single quotes, no semicolons, two-space indentation, trailing commas,
 and LF line endings. EditorConfig keeps editor whitespace settings consistent.
+Git enforces LF checkouts for text files through `.gitattributes`. Local environment
+files, coverage output, and TypeScript build metadata are ignored by Git;
+`.env.example` can be committed as a template.
 The Tailwind Prettier plugin sorts utility classes, including `cn` and `cva` calls.
 
 ESLint uses the recommended JavaScript, strict type-aware TypeScript, React Hooks,
@@ -103,8 +110,9 @@ The `Flake check` job validates all declared systems with
 `nix flake check --all-systems --no-update-lock-file`, including the Apple Silicon
 development shell. The lockfile must already be up to date.
 
-The `App checks` job uses Node.js 26 (matching `flake.nix`) and pnpm 12.9.0, caches
-the pnpm store, and installs with a frozen lockfile. It checks formatting, lint,
+The `App checks` job uses Node.js 26 (matching `flake.nix`) and reads the pnpm version
+from `packageManager` in `package.json`. It caches the pnpm store and installs with a
+frozen lockfile. It checks formatting, lint,
 types, unused code/dependencies, and the production build in separate steps. Husky
 hooks are disabled in CI.
 Run the same checks locally with:

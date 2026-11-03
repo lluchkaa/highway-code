@@ -2,7 +2,8 @@
 
 Use the commands and conventions in [README.md](README.md). The executable rules
 live in `eslint.config.js`, the TypeScript configs, `prettier.config.js`, and
-`knip.json`; update the README when changing them.
+`knip.json`. Installation policy lives in `pnpm-workspace.yaml`; update the README
+when changing these rules.
 
 - Run `pnpm check` and `pnpm build` before finishing changes. Format and check
   question JSON alongside the rest of the project.
