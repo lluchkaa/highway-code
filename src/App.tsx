@@ -1,11 +1,13 @@
-import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { useCounterStore } from '@/stores/counter-store'
 import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const count = useCounterStore((state) => state.count)
+  const increment = useCounterStore((state) => state.increment)
 
   return (
     <>
@@ -21,13 +23,9 @@ function App() {
             Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
           </p>
         </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
+        <Button type="button" className="mb-6" onClick={increment}>
           Count is {count}
-        </button>
+        </Button>
       </section>
 
       <div className="ticks"></div>
