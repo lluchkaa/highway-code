@@ -64,16 +64,22 @@ Run `pnpm check` for validation of the entire project, including types.
 
 ## CI
 
-GitHub Actions runs `.github/workflows/ci.yml` on pushes, pull requests, and manual
-dispatches. It uses Node.js 26 (matching `flake.nix`) and pnpm 12.9.0, caches the
-pnpm store, and installs with a frozen lockfile.
-Husky hooks are disabled in CI.
+GitHub Actions runs the `quality` workflow in `.github/workflows/quality.yml` on
+pushes, pull requests, and manual dispatches. Its `App checks` and `Flake check`
+jobs run concurrently. New commits cancel older runs for the same branch or pull
+request.
 
-The `Checks` job checks formatting, lint, types, and the production build in
-separate steps. New commits cancel older runs for the same branch or pull request.
+The `Flake check` job validates all declared systems with
+`nix flake check --all-systems --no-update-lock-file`, including the Apple Silicon
+development shell. The lockfile must already be up to date.
+
+The `App checks` job uses Node.js 26 (matching `flake.nix`) and pnpm 12.9.0, caches
+the pnpm store, and installs with a frozen lockfile. It checks formatting, lint,
+types, and the production build in separate steps. Husky hooks are disabled in CI.
 Run the same checks locally with:
 
 ```sh
+nix flake check --all-systems --no-update-lock-file
 pnpm check
 pnpm build
 ```
