@@ -20,7 +20,7 @@ The `typescript` alias provides the TypeScript 6 API required by typescript-esli
 - Tailwind CSS 4 runs through `@tailwindcss/vite`; global styles and shadcn theme
   tokens live in `src/index.css`.
 - shadcn/ui uses Base UI, the Nova style, and a neutral theme. Components live in
-  `src/components/ui`; `components.json` configures the generator.
+  `src/components/uikit`; `components.json` configures the generator.
 - CVA defines component variants. Tailwind Variants is intentionally omitted.
 - Import application code through `@/`, which resolves to `src/` in TypeScript
   and Vite.

@@ -60,7 +60,7 @@ export default defineConfig([
     },
   },
   {
-    files: ['src/components/ui/button.tsx'],
+    files: ['src/components/uikit/button.tsx'],
     rules: {
       'react-refresh/only-export-components': [
         'error',
