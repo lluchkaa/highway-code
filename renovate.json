@@ -1,0 +1,21 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:best-practices"],
+  "ignorePresets": [":pinDevDependencies"],
+  "timezone": "Europe/Kyiv",
+  "packageRules": [
+    {
+      "description": "Keep caret ranges and raise their minimum versions when updating npm packages.",
+      "matchManagers": ["npm"],
+      "rangeStrategy": "bump"
+    },
+    {
+      "description": "Keep automated updates to minor and patch releases; upgrade major versions manually.",
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    }
+  ],
+  "nix": {
+    "enabled": true
+  }
+}
