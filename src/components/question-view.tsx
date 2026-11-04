@@ -147,19 +147,27 @@ export function QuestionView({
       {saved && (
         <AnswerExplanation question={question} correct={saved.correct} />
       )}
-      <div className="mt-7 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-5">
+      <nav
+        aria-label="Навігація питання"
+        className="pointer-events-none sticky bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-30 mt-7 flex flex-wrap items-center justify-between gap-3"
+      >
         <Link
-          className={buttonVariants({
-            variant: 'outline',
-            className: 'h-11 rounded-xl px-4',
-          })}
+          className={cn(
+            buttonVariants({ variant: 'outline' }),
+            'pointer-events-auto h-11 rounded-xl bg-card px-3 shadow-lg shadow-black/15 sm:px-4 dark:bg-card dark:shadow-black/35',
+          )}
           to={previous ? questionPath(summary.id, previous.id) : routes.home}
         >
           <ArrowLeft aria-hidden="true" />
-          <span>{previous ? 'Назад' : 'До тем'}</span>
+          <span className="max-[360px]:sr-only">
+            {previous ? 'Назад' : 'До тем'}
+          </span>
         </Link>
         <Link
-          className={buttonVariants({ className: 'h-11 rounded-xl px-5' })}
+          className={cn(
+            buttonVariants(),
+            'pointer-events-auto h-11 rounded-xl px-3 shadow-lg shadow-black/15 sm:px-5 dark:shadow-black/35',
+          )}
           to={nextQuestionPath(categories, category, position)}
         >
           {last
@@ -171,7 +179,7 @@ export function QuestionView({
               : 'Пропустити'}
           <ArrowRight aria-hidden="true" />
         </Link>
-      </div>
+      </nav>
     </section>
   )
 }

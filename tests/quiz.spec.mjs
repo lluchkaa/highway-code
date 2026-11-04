@@ -33,6 +33,97 @@ function answers(page) {
     .getByRole('button')
 }
 
+for (const viewport of [
+  { width: 390, height: 844 },
+  { width: 1280, height: 720 },
+]) {
+  test(`question actions float and return to their place at ${String(viewport.width)}px`, async ({
+    page,
+  }, testInfo) => {
+    await page.setViewportSize(viewport)
+    await page.goto('./#/categories/0/questions/1')
+    const navigation = page.getByRole('navigation', {
+      name: 'Навігація питання',
+      exact: true,
+    })
+    await expect(navigation.getByRole('link')).toHaveCount(2)
+    await expect
+      .poll(async () => {
+        const box = await navigation.boundingBox()
+        return box ? Math.round(box.y + box.height) : null
+      })
+      .toBe(viewport.height - 12)
+    expect(
+      await navigation.evaluate((element) => {
+        const links = element.querySelectorAll('a')
+        const back = links[0]?.getBoundingClientRect()
+        const next = links[1]?.getBoundingClientRect()
+        const bounds = element.getBoundingClientRect()
+        return Boolean(
+          back &&
+          next &&
+          !element.contains(
+            document.elementFromPoint(
+              (back.right + next.left) / 2,
+              bounds.top + bounds.height / 2,
+            ),
+          ),
+        )
+      }),
+    ).toBe(true)
+    await page.screenshot({ path: testInfo.outputPath('actions-floating.png') })
+
+    await answers(page).first().click()
+    await expect(
+      page.getByRole('status', { name: 'Результат і пояснення' }),
+    ).toBeVisible()
+    await page.evaluate(() => {
+      scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: 'instant',
+      })
+    })
+    await expect
+      .poll(() =>
+        navigation.evaluate((element) => {
+          const parent = element.parentElement
+          if (!parent) {
+            return null
+          }
+          const style = getComputedStyle(parent)
+          return Math.round(
+            parent.getBoundingClientRect().bottom -
+              Number.parseFloat(style.paddingBottom) -
+              Number.parseFloat(style.borderBottomWidth) -
+              element.getBoundingClientRect().bottom,
+          )
+        }),
+      )
+      .toBe(0)
+    const docked = await navigation.boundingBox()
+    expect(docked).not.toBeNull()
+    expect(docked.y + docked.height).toBeLessThan(viewport.height - 30)
+    await page.screenshot({ path: testInfo.outputPath('actions-in-place.png') })
+
+    await page.evaluate(() => {
+      scrollTo({ top: 0, behavior: 'instant' })
+    })
+    await expect
+      .poll(async () => {
+        const box = await navigation.boundingBox()
+        return box ? Math.round(box.y + box.height) : null
+      })
+      .toBe(viewport.height - 12)
+    await navigation.getByRole('link', { name: 'Далі', exact: true }).click()
+    await expect(page).toHaveURL(/questions\/2$/)
+    await page
+      .getByRole('navigation', { name: 'Навігація питання', exact: true })
+      .getByRole('link', { name: 'Назад', exact: true })
+      .click()
+    await expect(page).toHaveURL(/questions\/1$/)
+  })
+}
+
 test('answers immediately, renders explanations, retries, and restores a direct question link', async ({
   page,
 }) => {
