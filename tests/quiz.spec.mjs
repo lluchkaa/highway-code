@@ -235,15 +235,46 @@ test('persists explicit themes and resumes following the system when requested',
   await page.emulateMedia({ colorScheme: 'light' })
   await page.goto('./')
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
+  const lightBackground = await page
+    .locator('body')
+    .evaluate((element) => getComputedStyle(element).backgroundColor)
+  const lightText = await page
+    .locator('body')
+    .evaluate((element) => getComputedStyle(element).color)
+  const lightCard = await page
+    .getByRole('article')
+    .first()
+    .evaluate((element) => getComputedStyle(element).backgroundColor)
   await page.getByRole('combobox', { name: 'Тема оформлення' }).click()
   await page.getByRole('option', { name: 'Темна', exact: true }).click()
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+  await expect(page.locator('body')).not.toHaveCSS(
+    'background-color',
+    lightBackground,
+  )
+  await expect(page.locator('body')).not.toHaveCSS('color', lightText)
+  await expect(page.getByRole('article').first()).not.toHaveCSS(
+    'background-color',
+    lightCard,
+  )
   await page.reload()
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+  await expect(page.locator('body')).not.toHaveCSS(
+    'background-color',
+    lightBackground,
+  )
   await page.getByRole('combobox', { name: 'Тема оформлення' }).click()
   await page.getByRole('option', { name: 'Світла', exact: true }).click()
   await page.emulateMedia({ colorScheme: 'dark' })
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
+  await expect(page.locator('body')).toHaveCSS(
+    'background-color',
+    lightBackground,
+  )
+  await expect(page.getByRole('article').first()).toHaveCSS(
+    'background-color',
+    lightCard,
+  )
   await page.getByRole('combobox', { name: 'Тема оформлення' }).click()
   await page.getByRole('option', { name: 'Як у системі', exact: true }).click()
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
