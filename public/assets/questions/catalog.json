@@ -1,0 +1,573 @@
+{
+  "version": 1,
+  "categories": [
+    {
+      "id": 0,
+      "title": "Загальні положення",
+      "group": "general",
+      "questionCount": 79,
+      "firstQuestionId": 1,
+      "revision": "cd34f05bc5143ef7"
+    },
+    {
+      "id": 1,
+      "title": "Обов'язки і права водіїв механічних транспортних засобів",
+      "group": "general",
+      "questionCount": 37,
+      "firstQuestionId": 608,
+      "revision": "3372b43638a9a36a"
+    },
+    {
+      "id": 2,
+      "title": "Рух транспортних засобів із спеціальними сигналами",
+      "group": "general",
+      "questionCount": 16,
+      "firstQuestionId": 771,
+      "revision": "357317ea00bf8c87"
+    },
+    {
+      "id": 3,
+      "title": "Обов'язки і права пішоходів",
+      "group": "general",
+      "questionCount": 26,
+      "firstQuestionId": 1473,
+      "revision": "708d09a9af1de5ab"
+    },
+    {
+      "id": 4,
+      "title": "Обов'язки і права пасажирів",
+      "group": "general",
+      "questionCount": 16,
+      "firstQuestionId": 1805,
+      "revision": "47df88cfb8a25e5a"
+    },
+    {
+      "id": 5,
+      "title": "Вимоги до велосипедистів",
+      "group": "general",
+      "questionCount": 22,
+      "firstQuestionId": 2097,
+      "revision": "0fcaef59fac398e4"
+    },
+    {
+      "id": 6,
+      "title": "Вимоги до осіб, які керують гужовим транспортом, і погоничів тварин",
+      "group": "general",
+      "questionCount": 8,
+      "firstQuestionId": 2172,
+      "revision": "6fa5e006375bc545"
+    },
+    {
+      "id": 7,
+      "title": "Регулювання дорожнього руху (Регульовані перехрестя)",
+      "group": "general",
+      "questionCount": 84,
+      "firstQuestionId": 2180,
+      "revision": "a785a51bbc78be19"
+    },
+    {
+      "id": 8,
+      "title": "Регулювання дорожнього руху (Нерегульовані перехрестя)",
+      "group": "general",
+      "questionCount": 7,
+      "firstQuestionId": 2264,
+      "revision": "a01e02b0e35e006a"
+    },
+    {
+      "id": 9,
+      "title": "Попереджувальні сигнали",
+      "group": "general",
+      "questionCount": 60,
+      "firstQuestionId": 2271,
+      "revision": "c6234c91d96e7517"
+    },
+    {
+      "id": 10,
+      "title": "Початок руху та зміна його напрямку",
+      "group": "general",
+      "questionCount": 76,
+      "firstQuestionId": 80,
+      "revision": "b99224fbe68e6f6b"
+    },
+    {
+      "id": 11,
+      "title": "Розташування транспортних засобів на дорозі",
+      "group": "general",
+      "questionCount": 39,
+      "firstQuestionId": 156,
+      "revision": "c4e72a6441536ab7"
+    },
+    {
+      "id": 12,
+      "title": "Швидкість руху",
+      "group": "general",
+      "questionCount": 41,
+      "firstQuestionId": 195,
+      "revision": "fc923ada1e723a87"
+    },
+    {
+      "id": 13,
+      "title": "Дистанція, інтервал, зустрічний роз'їзд",
+      "group": "general",
+      "questionCount": 13,
+      "firstQuestionId": 236,
+      "revision": "18c0d24f951dd56a"
+    },
+    {
+      "id": 14,
+      "title": "Обгін",
+      "group": "general",
+      "questionCount": 56,
+      "firstQuestionId": 249,
+      "revision": "42569ba87a62ed77"
+    },
+    {
+      "id": 15,
+      "title": "Зупинка і стоянка",
+      "group": "general",
+      "questionCount": 97,
+      "firstQuestionId": 305,
+      "revision": "a2f935c35778be71"
+    },
+    {
+      "id": 16,
+      "title": "Проїзд перехресть (Регульовані перехрестя)",
+      "group": "general",
+      "questionCount": 34,
+      "firstQuestionId": 402,
+      "revision": "8f58c1da9854a3f2"
+    },
+    {
+      "id": 17,
+      "title": "Проїзд перехресть (Нерегульовані перехрестя)",
+      "group": "general",
+      "questionCount": 109,
+      "firstQuestionId": 436,
+      "revision": "ccdce755bc95ce9b"
+    },
+    {
+      "id": 18,
+      "title": "Переваги маршрутних транспортних засобів",
+      "group": "general",
+      "questionCount": 11,
+      "firstQuestionId": 545,
+      "revision": "e0e3b5d08160b2ce"
+    },
+    {
+      "id": 19,
+      "title": "Проїзд пішохідних переходів і зупинок транспортних засобів",
+      "group": "general",
+      "questionCount": 19,
+      "firstQuestionId": 556,
+      "revision": "b12f396572328d19"
+    },
+    {
+      "id": 20,
+      "title": "Користування зовнішніми світловими приладами",
+      "group": "general",
+      "questionCount": 33,
+      "firstQuestionId": 575,
+      "revision": "77cfe474f949d007"
+    },
+    {
+      "id": 21,
+      "title": "Рух через залізничні переїзди",
+      "group": "general",
+      "questionCount": 31,
+      "firstQuestionId": 645,
+      "revision": "8762ca0e4e204196"
+    },
+    {
+      "id": 22,
+      "title": "Перевезення пасажирів",
+      "group": "general",
+      "questionCount": 12,
+      "firstQuestionId": 676,
+      "revision": "bc6f63afc4571903"
+    },
+    {
+      "id": 23,
+      "title": "Перевезення вантажу",
+      "group": "general",
+      "questionCount": 6,
+      "firstQuestionId": 688,
+      "revision": "c67a3400f787821e"
+    },
+    {
+      "id": 24,
+      "title": "Буксирування та експлуатація транспортних составів",
+      "group": "general",
+      "questionCount": 20,
+      "firstQuestionId": 694,
+      "revision": "d7e9438f3557aff2"
+    },
+    {
+      "id": 25,
+      "title": "Навчальна їзда",
+      "group": "general",
+      "questionCount": 14,
+      "firstQuestionId": 714,
+      "revision": "60620a1832fe7e79"
+    },
+    {
+      "id": 26,
+      "title": "Рух транспортних засобів у колонах",
+      "group": "general",
+      "questionCount": 8,
+      "firstQuestionId": 728,
+      "revision": "9f9a7a6f5e90ad00"
+    },
+    {
+      "id": 27,
+      "title": "Рух у житловій та пішохідній зоні",
+      "group": "general",
+      "questionCount": 13,
+      "firstQuestionId": 736,
+      "revision": "07714ce3f72b3aa6"
+    },
+    {
+      "id": 28,
+      "title": "Рух по автомагістралях і дорогах для автомобілів",
+      "group": "general",
+      "questionCount": 13,
+      "firstQuestionId": 749,
+      "revision": "8efc180e28c8069e"
+    },
+    {
+      "id": 29,
+      "title": "Рух по гірських дорогах і на крутих спусках",
+      "group": "general",
+      "questionCount": 8,
+      "firstQuestionId": 762,
+      "revision": "89979b1cbe3ef961"
+    },
+    {
+      "id": 30,
+      "title": "Міжнародний рух",
+      "group": "general",
+      "questionCount": 1,
+      "firstQuestionId": 770,
+      "revision": "42f5cfc5b8e71ab4"
+    },
+    {
+      "id": 31,
+      "title": "Номерні, розпізнавальні знаки, написи і позначення",
+      "group": "general",
+      "questionCount": 14,
+      "firstQuestionId": 787,
+      "revision": "3b43a360c2805f66"
+    },
+    {
+      "id": 32,
+      "title": "Технічний стан транспортних засобів та їх обладнання",
+      "group": "general",
+      "questionCount": 18,
+      "firstQuestionId": 801,
+      "revision": "401e8424034fe7c5"
+    },
+    {
+      "id": 33,
+      "title": "Окремі питання дорожнього руху, що потребують узгодження",
+      "group": "general",
+      "questionCount": 5,
+      "firstQuestionId": 819,
+      "revision": "f3244f739dcfcb60"
+    },
+    {
+      "id": 34,
+      "title": "Попереджувальні знаки",
+      "group": "general",
+      "questionCount": 82,
+      "firstQuestionId": 824,
+      "revision": "e04942e9ef5b742a"
+    },
+    {
+      "id": 35,
+      "title": "Знаки пріоритету",
+      "group": "general",
+      "questionCount": 25,
+      "firstQuestionId": 906,
+      "revision": "ef5fc30e60572589"
+    },
+    {
+      "id": 36,
+      "title": "Заборонні знаки",
+      "group": "general",
+      "questionCount": 97,
+      "firstQuestionId": 931,
+      "revision": "6e87d55752fa57bd"
+    },
+    {
+      "id": 37,
+      "title": "Наказові знаки",
+      "group": "general",
+      "questionCount": 31,
+      "firstQuestionId": 1028,
+      "revision": "d013a5117fe77d2d"
+    },
+    {
+      "id": 38,
+      "title": "Інформаційно-вказівні знаки",
+      "group": "general",
+      "questionCount": 88,
+      "firstQuestionId": 1059,
+      "revision": "42c2ea59413f3a92"
+    },
+    {
+      "id": 39,
+      "title": "Знаки сервісу",
+      "group": "general",
+      "questionCount": 8,
+      "firstQuestionId": 1147,
+      "revision": "0aadd57ce1fcaac7"
+    },
+    {
+      "id": 40,
+      "title": "Таблички до дорожніх знаків",
+      "group": "general",
+      "questionCount": 26,
+      "firstQuestionId": 1155,
+      "revision": "96955d4ee6415cd4"
+    },
+    {
+      "id": 41,
+      "title": "Дорожня розмітка",
+      "group": "general",
+      "questionCount": 35,
+      "firstQuestionId": 1181,
+      "revision": "7e748c199182255e"
+    },
+    {
+      "id": 42,
+      "title": "Основи безпечного водіння",
+      "group": "general",
+      "questionCount": 170,
+      "firstQuestionId": 1216,
+      "revision": "3974f74317dabf53"
+    },
+    {
+      "id": 43,
+      "title": "Основи права в області дорожнього руху",
+      "group": "general",
+      "questionCount": 8,
+      "firstQuestionId": 1386,
+      "revision": "a1169190b75aec05"
+    },
+    {
+      "id": 44,
+      "title": "Надання першої медичної допомоги",
+      "group": "general",
+      "questionCount": 59,
+      "firstQuestionId": 1394,
+      "revision": "ecbc75245feab6b9"
+    },
+    {
+      "id": 45,
+      "title": "Етика водіння, культура та відпочинок водія",
+      "group": "general",
+      "questionCount": 14,
+      "firstQuestionId": 1453,
+      "revision": "3d4defe770c3a51c"
+    },
+    {
+      "id": 46,
+      "title": "Європротокол",
+      "group": "general",
+      "questionCount": 6,
+      "firstQuestionId": 1467,
+      "revision": "f2e1412de2d0ee50"
+    },
+    {
+      "id": 47,
+      "title": "Додаткові питання щодо категорій А1, А (Загальні)",
+      "group": "A",
+      "questionCount": 31,
+      "firstQuestionId": 1499,
+      "revision": "f04b88914f45b144"
+    },
+    {
+      "id": 48,
+      "title": "Додаткові питання щодо категорій А1, А (Будова і терміни)",
+      "group": "A",
+      "questionCount": 13,
+      "firstQuestionId": 1530,
+      "revision": "9e258960ff75dfc0"
+    },
+    {
+      "id": 49,
+      "title": "Додаткові питання щодо категорій А1, А (Юридична відповідальність)",
+      "group": "A",
+      "questionCount": 20,
+      "firstQuestionId": 1543,
+      "revision": "128d7fb47cf2ca06"
+    },
+    {
+      "id": 50,
+      "title": "Додаткові питання щодо категорій А1, А (Безпека)",
+      "group": "A",
+      "questionCount": 34,
+      "firstQuestionId": 1563,
+      "revision": "ee18d8f7f939752f"
+    },
+    {
+      "id": 51,
+      "title": "Додаткові питання щодо категорій В1, В (Загальні)",
+      "group": "B",
+      "questionCount": 16,
+      "firstQuestionId": 1597,
+      "revision": "9f07a3511c800b1e"
+    },
+    {
+      "id": 52,
+      "title": "Додаткові питання щодо категорій В1, В (Будова і терміни)",
+      "group": "B",
+      "questionCount": 33,
+      "firstQuestionId": 1613,
+      "revision": "d399b69775985cbd"
+    },
+    {
+      "id": 53,
+      "title": "Додаткові питання щодо категорій В1, В (Юридична відповідальність)",
+      "group": "B",
+      "questionCount": 9,
+      "firstQuestionId": 1646,
+      "revision": "5d58ef3d907f2725"
+    },
+    {
+      "id": 54,
+      "title": "Додаткові питання щодо категорій В1, В (Безпека)",
+      "group": "B",
+      "questionCount": 7,
+      "firstQuestionId": 1655,
+      "revision": "4f9ce2661b9a7c1e"
+    },
+    {
+      "id": 55,
+      "title": "Додаткові питання щодо категорій C1,C (Загальні)",
+      "group": "C",
+      "questionCount": 88,
+      "firstQuestionId": 1662,
+      "revision": "d0793bb83f6b1a19"
+    },
+    {
+      "id": 56,
+      "title": "Додаткові питання щодо категорій C1,C (Будова і терміни)",
+      "group": "C",
+      "questionCount": 55,
+      "firstQuestionId": 1750,
+      "revision": "c8b1dd340c507890"
+    },
+    {
+      "id": 57,
+      "title": "Додаткові питання щодо категорій C1,C (Юридична відповідальність)",
+      "group": "C",
+      "questionCount": 12,
+      "firstQuestionId": 1821,
+      "revision": "17be5b89f32ce6d8"
+    },
+    {
+      "id": 58,
+      "title": "Додаткові питання щодо категорій C1,C (Безпека)",
+      "group": "C",
+      "questionCount": 43,
+      "firstQuestionId": 1833,
+      "revision": "0c953d1e55153311"
+    },
+    {
+      "id": 59,
+      "title": "Додаткові питання щодо категорій D1, D (Загальні)",
+      "group": "D",
+      "questionCount": 66,
+      "firstQuestionId": 1876,
+      "revision": "6d0ef68450a11681"
+    },
+    {
+      "id": 60,
+      "title": "Додаткові питання щодо категорій D1, D (Будова і терміни)",
+      "group": "D",
+      "questionCount": 45,
+      "firstQuestionId": 1942,
+      "revision": "91cc7a758e8ee37d"
+    },
+    {
+      "id": 61,
+      "title": "Додаткові питання щодо категорій D1, D (Юридична відповідальність)",
+      "group": "D",
+      "questionCount": 36,
+      "firstQuestionId": 1987,
+      "revision": "8f767c02cf692393"
+    },
+    {
+      "id": 62,
+      "title": "Додаткові питання щодо категорій D1, D (Безпека)",
+      "group": "D",
+      "questionCount": 30,
+      "firstQuestionId": 2023,
+      "revision": "9585b924108e36f9"
+    },
+    {
+      "id": 63,
+      "title": "Додаткові питання щодо категорій BE, C1E, CE, D1E, DE (Загальні)",
+      "group": "E",
+      "questionCount": 21,
+      "firstQuestionId": 2053,
+      "revision": "936e569cbe9487fe"
+    },
+    {
+      "id": 64,
+      "title": "Додаткові питання щодо категорій BE, C1E, CE, D1E, DE (Будова і терміни)",
+      "group": "E",
+      "questionCount": 5,
+      "firstQuestionId": 2074,
+      "revision": "1e9546457d032e78"
+    },
+    {
+      "id": 65,
+      "title": "Додаткові питання щодо категорій BE, C1E, CE, D1E, DE (Юридична відповідальність)",
+      "group": "E",
+      "questionCount": 3,
+      "firstQuestionId": 2079,
+      "revision": "20decddea5f73e5a"
+    },
+    {
+      "id": 66,
+      "title": "Додаткові питання щодо категорій BE, C1E, CE, D1E, DE (Безпека)",
+      "group": "E",
+      "questionCount": 15,
+      "firstQuestionId": 2082,
+      "revision": "6285526d3676171f"
+    },
+    {
+      "id": 67,
+      "title": "Додаткові питання щодо категорії T (Загальні)",
+      "group": "T",
+      "questionCount": 18,
+      "firstQuestionId": 2119,
+      "revision": "0daafcd8382d9b58"
+    },
+    {
+      "id": 68,
+      "title": "Додаткові питання щодо категорії Т (Будова і терміни)",
+      "group": "T",
+      "questionCount": 7,
+      "firstQuestionId": 2137,
+      "revision": "147e94acdd644a82"
+    },
+    {
+      "id": 69,
+      "title": "Додаткові питання щодо категорії Т (Юридична відповідальність)",
+      "group": "T",
+      "questionCount": 16,
+      "firstQuestionId": 2144,
+      "revision": "0c966f07506a4b8c"
+    },
+    {
+      "id": 70,
+      "title": "Додаткові питання щодо категорії Т (Безпека)",
+      "group": "T",
+      "questionCount": 12,
+      "firstQuestionId": 2160,
+      "revision": "2b360c4efe184894"
+    }
+  ]
+}

@@ -81,6 +81,10 @@ export default defineConfig([
     },
   },
   {
+    files: ['tests/**/*.mjs'],
+    languageOptions: { globals: { ...globals.node, ...globals.browser } },
+  },
+  {
     files: ['**/*.{ts,tsx,mts,cts}'],
     extends: [
       js.configs.recommended,
@@ -119,6 +123,10 @@ export default defineConfig([
       globals: globals.browser,
     },
     rules: {
+      '@typescript-eslint/only-throw-error': [
+        'error',
+        { allow: [{ from: 'lib', name: 'Response' }] },
+      ],
       'import-x/no-restricted-paths': [
         'error',
         {
@@ -154,7 +162,16 @@ export default defineConfig([
     },
   },
   {
-    files: ['vite.config.ts'],
+    files: ['src/components/uikit/button.tsx'],
+    rules: {
+      'react-refresh/only-export-components': [
+        'error',
+        { allowConstantExport: true, allowExportNames: ['buttonVariants'] },
+      ],
+    },
+  },
+  {
+    files: ['vite.config.ts', 'playwright.config.ts', 'scripts/**/*.ts'],
     languageOptions: {
       globals: globals.node,
     },
