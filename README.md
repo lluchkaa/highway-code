@@ -50,16 +50,43 @@ pnpm exec shadcn add dialog
 
 ## Quiz data and behavior
 
-The homepage lists all 71 topics, grouped into general rules and additional
-license categories. Search and filters narrow the list. Opening a topic starts
-at its first question; `Продовжити` opens its last visited question. The question
-bar and number input allow navigation in any order.
+The homepage offers a multi-select for all supported driving-licence categories.
+With no selection, it shows the 47 general topics. Selecting categories adds their
+related sections from the full set of 71 topics; trailer licences include both
+their base vehicle group and the shared trailer topics. `Обрати всі` selects every
+licence. The source data groups A1/A, B1/B, C1/C, D1/D, and trailer topics together,
+so selecting either licence in a pair shows the shared section once. The selection
+is validated with Zod and saved under `highway-code:learning`; unavailable storage
+keeps the choice in memory for the current session. Search and topic filters
+further narrow the list. The question total and progress overview reflect the
+selected topics; changing licences preserves all saved answers.
+
+Opening a topic starts at its first question; `Продовжити` opens its last visited
+question. The numbered question bar allows navigation in any order.
+
+`Випадкові 20 питань` creates a practice set of 20 distinct questions from the
+general topics and selected licence groups. Every eligible group contributes at
+least one question; the remaining questions and their order are random. Only
+topics needed for the drawn questions are loaded. The set snapshots its question
+text, options, explanations, and local image paths without shuffling answer
+options. Its questions, answers, selected licences, and resume position are
+Zod-validated and stored in sessionStorage under `highway-code:random-practice`.
+Refreshing or returning to the homepage preserves the set in that tab.
+`Продовжити тест` resumes it; `Нові 20 питань` replaces it using the current licence
+selection. Changing the selection leaves an existing set available to finish.
+The summary lists all 20 questions, including unanswered ones, for review.
+Random practice answers belong to this session; topic progress remains separately
+saved in localStorage. Invalid snapshots or changed source revisions require a new
+set. If sessionStorage is unavailable or full, practice continues in memory with
+a visible notice.
 
 Clicking an answer immediately saves it and shows correctness and its explanation.
 Revisiting restores that answer. `Спробувати ще раз` keeps the saved answer until
 a new answer replaces it. After the last numbered question, `Наступна категорія`
-opens the next topic, even when earlier questions were skipped. The final topic
-returns to the list. Category and global reset actions require confirmation.
+opens the next topic in the selected categories, even when earlier questions were
+skipped. The final selected topic returns to the list. Direct links to unselected
+topics still work and return to the list after their last question. Category and
+global reset actions require confirmation.
 
 Source question JSON, images, and the asset manifest live in
 `public/assets/questions`. `catalog.json` lives beside them and contains only

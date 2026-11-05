@@ -10,16 +10,18 @@ import {
 import { useState } from 'react'
 
 import { CategoryCard } from '@/components/category-card'
+import { LicenceSelector } from '@/components/licence-selector'
 import { PageHead } from '@/components/page-head'
 import { ProgressOverview } from '@/components/progress-overview'
+import { RandomPracticeCard } from '@/components/random-practice-card'
 import { Badge } from '@/components/uikit/badge'
 import { Button } from '@/components/uikit/button'
 import { Input } from '@/components/uikit/input'
-import { useCatalog } from '@/hooks/use-catalog'
+import { useLearningCategories } from '@/hooks/use-learning-categories'
 import { categoryGroups } from '@/lib/catalog'
 
 export function HomePage() {
-  const categories = useCatalog()
+  const { categories, licences, setLicences } = useLearningCategories()
   const [search, setSearch] = useState('')
   const [filter, setFilter] = useState('all')
   const total = categories.reduce(
@@ -99,13 +101,15 @@ export function HomePage() {
             <ArrowDown className="size-4" aria-hidden="true" />
           </Button>
         </div>
-        <ProgressOverview total={total} />
+        <ProgressOverview categories={categories} />
       </section>
 
       <section
         id="topics"
         className="scroll-mt-6 border-t border-border/80 pt-9"
       >
+        <LicenceSelector licences={licences} onChange={setLicences} />
+        <RandomPracticeCard />
         <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
           <div>
             <p className="mb-2 text-[10px] font-semibold tracking-[0.18em] text-primary uppercase">
@@ -193,7 +197,8 @@ export function HomePage() {
               />
               <h3 className="font-semibold">Такої теми не знайшли</h3>
               <p className="mt-2 px-4 text-sm text-muted-foreground">
-                Спробуй іншу назву або зміни фільтр.
+                Спробуй іншу назву, зміни фільтр або обрані категорії
+                посвідчення.
               </p>
               <Button
                 variant="link"
@@ -203,7 +208,7 @@ export function HomePage() {
                   setFilter('all')
                 }}
               >
-                Показати всі теми
+                Скинути пошук і фільтр
                 <ArrowRight aria-hidden="true" />
               </Button>
             </div>

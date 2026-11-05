@@ -6,6 +6,11 @@ import type { Category, CategorySummary } from '@/lib/quiz-schema'
 export const routes = {
   home: '/',
   question: '/categories/:categoryId/questions/:questionId',
+  practice: '/practice',
+}
+
+export function practicePath(position: number) {
+  return `${routes.practice}?question=${String(position + 1)}`
 }
 
 export const questionRouteSchema = z.object({
@@ -37,8 +42,11 @@ export function nextQuestionPath(
   if (nextQuestion) {
     return questionPath(category.index, nextQuestion.id)
   }
+  const categoryIndex = categories.findIndex(
+    (item) => item.id === category.index,
+  )
   const nextCategory =
-    categories[categories.findIndex((item) => item.id === category.index) + 1]
+    categoryIndex < 0 ? undefined : categories[categoryIndex + 1]
   return nextCategory
     ? questionPath(nextCategory.id, nextCategory.firstQuestionId)
     : routes.home

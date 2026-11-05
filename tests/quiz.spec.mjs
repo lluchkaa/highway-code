@@ -177,15 +177,17 @@ test('answers immediately, renders explanations, retries, and restores a direct 
   expect(warnings).toEqual([])
 })
 
-test('jumps to a question, advances to the next category, and handles missing explanations', async ({
+test('uses the question bar, advances to the next category, and handles missing explanations', async ({
   page,
 }) => {
   await page.goto('./#/categories/0/questions/1')
+  await expect(page.getByRole('spinbutton')).toHaveCount(0)
   await page
-    .getByLabel('До питання', { exact: true })
-    .fill(String(categoryA.questions.length))
-  await page
-    .getByRole('button', { name: 'Перейти до питання', exact: true })
+    .getByRole('navigation', { name: 'Перехід між питаннями', exact: true })
+    .getByRole('link', {
+      name: `Питання ${String(categoryA.questions.length)}: без відповіді`,
+      exact: true,
+    })
     .click()
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
     categoryA.questions.at(-1).question_text,
@@ -257,7 +259,7 @@ test('filters topics and follows the system theme without horizontal page overfl
 }, testInfo) => {
   await page.emulateMedia({ colorScheme: 'light' })
   await page.goto('./')
-  await expect(page.getByRole('article')).toHaveCount(71)
+  await expect(page.getByRole('article')).toHaveCount(47)
   await page.getByRole('button', { name: 'Обрати тему', exact: true }).click()
   await expect(page).not.toHaveURL(/#topics/)
   await page
@@ -318,6 +320,211 @@ test('filters topics and follows the system theme without horizontal page overfl
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   ).toBe(true)
+})
+
+test('selects multiple licences, deduplicates shared topics, and remembers the choice', async ({
+  page,
+}, testInfo) => {
+  await page.goto('./')
+  const selector = page.getByRole('region', { name: 'Які категорії вивчаєш?' })
+  const licence = (value) =>
+    selector.getByRole('button', { name: `Категорія ${value}`, exact: true })
+  await expect(
+    selector.getByRole('button', { name: /^Категорія / }),
+  ).toHaveCount(14)
+  await expect(page.getByRole('article')).toHaveCount(47)
+
+  await licence('B').focus()
+  await page.keyboard.press('Space')
+  await expect(licence('B')).toHaveAttribute('aria-pressed', 'true')
+  await expect(page.getByRole('article')).toHaveCount(51)
+  await expect(
+    page.getByRole('region', { name: 'Категорії B1, B', exact: true }),
+  ).toBeVisible()
+  await expect(
+    page.getByRole('region', { name: 'Категорії A1, A', exact: true }),
+  ).toHaveCount(0)
+
+  await licence('A1').click()
+  await licence('A').click()
+  await expect(page.getByRole('article')).toHaveCount(55)
+  await licence('BE').click()
+  await expect(page.getByRole('article')).toHaveCount(59)
+  await page.reload()
+  for (const value of ['A1', 'A', 'B', 'BE']) {
+    await expect(licence(value)).toHaveAttribute('aria-pressed', 'true')
+  }
+  await expect(page.getByRole('article')).toHaveCount(59)
+  await licence('B').click()
+  await expect(page.getByRole('article')).toHaveCount(59)
+  await licence('BE').click()
+  await expect(page.getByRole('article')).toHaveCount(51)
+
+  await selector
+    .getByRole('button', { name: 'Обрати всі', exact: true })
+    .click()
+  await expect(page.getByRole('article')).toHaveCount(71)
+  await selector
+    .getByRole('button', { name: 'Скинути вибір', exact: true })
+    .click()
+  await expect(page.getByRole('article')).toHaveCount(47)
+  await page
+    .getByRole('button', { name: 'Додаткові категорії', exact: true })
+    .click()
+  await expect(
+    page.getByRole('heading', { name: 'Такої теми не знайшли' }),
+  ).toBeVisible()
+  await licence('B1').click()
+  await expect(page.getByRole('article')).toHaveCount(4)
+  await page
+    .getByRole('searchbox', { name: 'Знайти тему' })
+    .fill('неіснуюча тема')
+  await page
+    .getByRole('button', { name: 'Скинути пошук і фільтр', exact: true })
+    .click()
+  await expect(page.getByRole('article')).toHaveCount(51)
+  await expect(licence('B1')).toHaveAttribute('aria-pressed', 'true')
+
+  for (const width of [320, 390, 768, 1280]) {
+    await page.setViewportSize({ width, height: 900 })
+    await selector.scrollIntoViewIfNeeded()
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true)
+    await page.screenshot({
+      path: testInfo.outputPath(`licences-${String(width)}.png`),
+    })
+  }
+})
+
+test('matches every licence family and includes base topics for trailer licences', async ({
+  page,
+}) => {
+  await page.goto('./')
+  const selector = page.getByRole('region', { name: 'Які категорії вивчаєш?' })
+  const families = [
+    { licences: ['A1', 'A'], sections: ['Категорії A1, A'] },
+    { licences: ['B1', 'B'], sections: ['Категорії B1, B'] },
+    { licences: ['C1', 'C'], sections: ['Категорії C1, C'] },
+    { licences: ['D1', 'D'], sections: ['Категорії D1, D'] },
+    { licences: ['BE'], sections: ['Категорії B1, B', 'Категорії з причепом'] },
+    {
+      licences: ['C1E', 'CE'],
+      sections: ['Категорії C1, C', 'Категорії з причепом'],
+    },
+    {
+      licences: ['D1E', 'DE'],
+      sections: ['Категорії D1, D', 'Категорії з причепом'],
+    },
+    { licences: ['T'], sections: ['Категорія T'] },
+  ]
+  for (const family of families) {
+    for (const value of family.licences) {
+      const toggle = selector.getByRole('button', {
+        name: `Категорія ${value}`,
+        exact: true,
+      })
+      await toggle.click()
+      await expect(page.getByRole('article')).toHaveCount(
+        47 + family.sections.length * 4,
+      )
+      for (const section of family.sections) {
+        await expect(
+          page.getByRole('region', { name: section, exact: true }),
+        ).toBeVisible()
+      }
+      await toggle.click()
+      await expect(page.getByRole('article')).toHaveCount(47)
+    }
+  }
+})
+
+test('uses selected topics for progress and category transitions without losing other answers', async ({
+  page,
+}) => {
+  const catalog = JSON.parse(
+    readFileSync(
+      new URL('../public/assets/questions/catalog.json', import.meta.url),
+      'utf8',
+    ),
+  ).categories
+  const generalEnd = JSON.parse(
+    readFileSync(
+      new URL('../public/assets/questions/46-category.json', import.meta.url),
+      'utf8',
+    ),
+  )
+  const bEnd = JSON.parse(
+    readFileSync(
+      new URL('../public/assets/questions/54-category.json', import.meta.url),
+      'utf8',
+    ),
+  )
+  await page.goto(
+    `./#/categories/55/questions/${String(categoryC.questions[0].id)}`,
+  )
+  await answers(page).first().click()
+  await page.getByRole('link', { name: 'Усі теми', exact: true }).click()
+  const overview = page.getByRole('complementary', {
+    name: 'Прогрес обраних тем',
+  })
+  const totalGeneral = catalog
+    .filter((category) => category.group === 'general')
+    .reduce((sum, category) => sum + category.questionCount, 0)
+  await expect(
+    overview.getByText(String(totalGeneral), { exact: true }),
+  ).toBeVisible()
+  await page.getByRole('button', { name: 'Категорія C', exact: true }).click()
+  await expect(overview.getByText('1', { exact: true })).toHaveCount(1)
+  await page.getByRole('button', { name: 'Категорія C', exact: true }).click()
+  await page.getByRole('button', { name: 'Категорія B', exact: true }).click()
+
+  await page.goto(
+    `./#/categories/46/questions/${String(generalEnd.questions.at(-1).id)}`,
+  )
+  await page
+    .getByRole('link', { name: 'Наступна категорія', exact: true })
+    .click()
+  await expect(page).toHaveURL(
+    new RegExp(
+      `/categories/51/questions/${String(catalog[51].firstQuestionId)}$`,
+    ),
+  )
+  await page.goto(
+    `./#/categories/54/questions/${String(bEnd.questions.at(-1).id)}`,
+  )
+  await page.getByRole('link', { name: 'До списку тем', exact: true }).click()
+  await expect(page.getByRole('article')).toHaveCount(51)
+
+  await page.goto(
+    `./#/categories/55/questions/${String(categoryC.questions[0].id)}`,
+  )
+  await expect(answers(page).first()).toBeDisabled()
+  await page
+    .getByRole('navigation', { name: 'Перехід між питаннями', exact: true })
+    .getByRole('link')
+    .last()
+    .click()
+  await page.getByRole('link', { name: 'До списку тем', exact: true }).click()
+  await expect(page.getByRole('article')).toHaveCount(51)
+})
+
+test('recovers from malformed licence preferences', async ({ page }) => {
+  await page.goto('./')
+  for (const value of [
+    '{invalid',
+    JSON.stringify({ version: 1, state: { licences: ['invalid'] } }),
+  ]) {
+    await page.evaluate((raw) => {
+      localStorage.setItem('highway-code:learning', raw)
+    }, value)
+    await page.reload()
+    await expect(page.getByRole('article')).toHaveCount(47)
+    await page.getByRole('button', { name: 'Категорія B', exact: true }).click()
+    await expect(page.getByRole('article')).toHaveCount(51)
+  }
 })
 
 test('persists explicit themes and resumes following the system when requested', async ({
@@ -419,4 +626,12 @@ test('keeps the quiz usable when localStorage is unavailable', async ({
   await expect(
     page.getByRole('heading', { name: 'Правильно! Так тримати.' }),
   ).toBeVisible()
+  await page.getByRole('link', { name: 'Усі теми', exact: true }).click()
+  await page.getByRole('button', { name: 'Категорія B', exact: true }).click()
+  await expect(page.getByRole('article')).toHaveCount(51)
+  await page.goto('./#/categories/0/questions/1')
+  await page.getByRole('link', { name: 'Усі теми', exact: true }).click()
+  await expect(
+    page.getByRole('button', { name: 'Категорія B', exact: true }),
+  ).toHaveAttribute('aria-pressed', 'true')
 })

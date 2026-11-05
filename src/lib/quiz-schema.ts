@@ -6,7 +6,7 @@ const titleSchema = textSchema.transform((title) =>
   title.replace(/^\d+(?:\.\d+)?\.?\s+/, ''),
 )
 
-const questionSchema = z
+export const questionSchema = z
   .object({
     id: idSchema,
     question_text: textSchema,
@@ -52,21 +52,19 @@ export const categorySchema = z
 
 const groupSchema = z.enum(['general', 'A', 'B', 'C', 'D', 'E', 'T'])
 
+export const categorySummarySchema = z.object({
+  id: z.number().int().nonnegative(),
+  title: titleSchema,
+  group: groupSchema,
+  questionCount: idSchema,
+  firstQuestionId: idSchema,
+  revision: z.string().regex(/^[a-f0-9]{16}$/),
+})
+
 export const catalogSchema = z
   .object({
     version: z.literal(1),
-    categories: z
-      .array(
-        z.object({
-          id: z.number().int().nonnegative(),
-          title: titleSchema,
-          group: groupSchema,
-          questionCount: idSchema,
-          firstQuestionId: idSchema,
-          revision: z.string().regex(/^[a-f0-9]{16}$/),
-        }),
-      )
-      .min(1),
+    categories: z.array(categorySummarySchema).min(1),
   })
   .refine(
     (catalog) =>

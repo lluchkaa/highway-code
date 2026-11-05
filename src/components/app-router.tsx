@@ -9,6 +9,10 @@ import {
 } from '@/components/route-state'
 import { loadCatalog } from '@/lib/catalog'
 import { questionLoader } from '@/lib/question-loader'
+import {
+  randomPracticeLoader,
+  startRandomPractice,
+} from '@/lib/random-practice'
 import { routes } from '@/lib/routes'
 
 // Hosting switch: replace createHashRouter here with createBrowserRouter and
@@ -28,6 +32,17 @@ const router = createHashRouter([
           const { HomePage } = await import('@/components/home-page')
           return { Component: HomePage }
         },
+      },
+      {
+        path: routes.practice,
+        loader: randomPracticeLoader,
+        action: startRandomPractice,
+        lazy: async () => {
+          const { RandomPracticePage } =
+            await import('@/components/random-practice-page')
+          return { Component: RandomPracticePage }
+        },
+        ErrorBoundary: RouteError,
       },
       {
         path: routes.question,

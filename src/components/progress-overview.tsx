@@ -2,20 +2,32 @@ import { Check, Circle, HardDrive, X } from 'lucide-react'
 
 import { ResetProgressDialog } from '@/components/reset-progress-dialog'
 import { useProgress } from '@/hooks/use-progress'
+import type { CategorySummary } from '@/lib/quiz-schema'
 
-export function ProgressOverview({ total }: { total: number }) {
+export function ProgressOverview({
+  categories,
+}: {
+  categories: CategorySummary[]
+}) {
   const { answers, lastVisited, resetAll } = useProgress()
-  const saved = Object.values(answers)
+  const categoryIds = new Set(categories.map((category) => category.id))
+  const total = categories.reduce(
+    (count, category) => count + category.questionCount,
+    0,
+  )
+  const saved = Object.values(answers).filter((answer) =>
+    categoryIds.has(answer.categoryId),
+  )
   const correct = saved.filter((answer) => answer.correct).length
   const percentage = Math.round((saved.length / total) * 100)
   const circumference = 2 * Math.PI * 45
   return (
     <aside
       className="relative overflow-hidden rounded-3xl border border-primary/15 bg-secondary/50 p-6 sm:p-7"
-      aria-label="Загальний прогрес"
+      aria-label="Прогрес обраних тем"
     >
       <div className="mb-5 flex items-center justify-between gap-3">
-        <h2 className="text-sm font-semibold">Твій прогрес</h2>
+        <h2 className="text-sm font-semibold">Прогрес обраних тем</h2>
         <span className="rounded-full bg-card/70 px-2.5 py-1 text-[11px] font-medium text-primary">
           У своєму темпі
         </span>
@@ -99,7 +111,10 @@ export function ProgressOverview({ total }: { total: number }) {
         </span>
         <ResetProgressDialog
           scope="all"
-          disabled={saved.length === 0 && Object.keys(lastVisited).length === 0}
+          disabled={
+            Object.keys(answers).length === 0 &&
+            Object.keys(lastVisited).length === 0
+          }
           onReset={resetAll}
         />
       </div>

@@ -8,11 +8,11 @@ import { ResetProgressDialog } from '@/components/reset-progress-dialog'
 import { Progress } from '@/components/uikit/progress'
 import { useProgress } from '@/hooks/use-progress'
 import { useQuestion } from '@/hooks/use-question'
-import { routes } from '@/lib/routes'
+import { questionPath, routes } from '@/lib/routes'
 
 export function QuestionPage() {
   const { category, summary, position, question } = useQuestion()
-  const { getStats, resetCategory, lastVisited } = useProgress()
+  const { getStats, resetCategory, lastVisited, answers } = useProgress()
   const { answered, correct, incorrect } = getStats(summary)
   const title = summary.title
   return (
@@ -71,7 +71,10 @@ export function QuestionPage() {
       </div>
       <QuestionNavigation
         key={category.index}
-        category={category}
+        items={category.questions.map((item) => ({
+          to: questionPath(category.index, item.id),
+          correct: answers[item.id]?.correct,
+        }))}
         position={position}
       />
       <QuestionView
