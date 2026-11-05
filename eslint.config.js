@@ -9,6 +9,7 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
 
+import { persistenceRules, uikitRules } from './eslint/ui-policy.js'
 import uiStyle from './eslint/ui-style.js'
 
 export default defineConfig([
@@ -194,6 +195,16 @@ export default defineConfig([
     },
   },
   {
+    files: ['src/**/*.{ts,tsx}'],
+    ignores: ['src/components/uikit/**'],
+    rules: uikitRules,
+  },
+  {
+    files: ['src/**/*.{ts,tsx}'],
+    ignores: ['src/stores/persistence/**', '**/*.test.ts'],
+    rules: persistenceRules,
+  },
+  {
     files: ['src/**/*.tsx'],
     extends: [jsxA11y.configs.recommended],
     plugins: { 'ui-style': uiStyle },
@@ -219,12 +230,37 @@ export default defineConfig([
     },
   },
   {
-    files: ['src/components/uikit/button.tsx'],
+    files: [
+      'src/components/uikit/button.tsx',
+      'src/components/uikit/toggle.tsx',
+    ],
     rules: {
       'react-refresh/only-export-components': [
         'error',
-        { allowConstantExport: true, allowExportNames: ['buttonVariants'] },
+        {
+          allowConstantExport: true,
+          allowExportNames: ['buttonVariants', 'toggleVariants'],
+        },
       ],
+    },
+  },
+  {
+    files: ['src/components/uikit/chart.tsx'],
+    rules: {
+      // The generated Recharts tooltip/legend adapter receives polymorphic payloads.
+      '@typescript-eslint/restrict-template-expressions': 'off',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-unsafe-argument': 'off',
+      '@typescript-eslint/no-unnecessary-condition': 'off',
+    },
+  },
+  {
+    files: ['src/components/uikit/input-group.tsx'],
+    rules: {
+      // The generated addon delegates mouse focus to an already keyboard-focusable input.
+      'jsx-a11y-x/click-events-have-key-events': 'off',
+      'jsx-a11y-x/no-noninteractive-element-interactions': 'off',
     },
   },
   {

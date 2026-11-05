@@ -2,6 +2,8 @@ import { cn } from 'cn'
 import { Check, X } from 'lucide-react'
 import type * as React from 'react'
 
+import { Button } from '@/components/uikit'
+
 type Props = {
   option: string
   index: number
@@ -21,12 +23,13 @@ export const AnswerOption: React.FC<Props> = ({
 }) => {
   return (
     <li>
-      <button
+      <Button
+        variant="outline"
         type="button"
         disabled={answered}
         onClick={onAnswer}
         className={cn(
-          'flex min-h-14 w-full items-start gap-3 rounded-xl border p-4 text-left text-sm leading-relaxed transition-colors outline-none focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-default',
+          'flex h-auto min-h-14 w-full items-start justify-start gap-3 rounded-xl border p-4 text-left text-sm leading-relaxed whitespace-normal transition-colors outline-none focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-default disabled:opacity-100',
           correct
             ? 'border-success/45 bg-success/7'
             : incorrect
@@ -61,7 +64,7 @@ export const AnswerOption: React.FC<Props> = ({
             <span className="sr-only"> — твоя відповідь, неправильна</span>
           )}
         </span>
-      </button>
+      </Button>
     </li>
   )
 }

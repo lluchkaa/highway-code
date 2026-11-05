@@ -8,6 +8,7 @@ import { PracticeQuestion } from '@/app/practice/components/practice-question'
 import { PracticeResults } from '@/app/practice/components/practice-results'
 import type { randomPracticeLoader } from '@/app/practice/loader'
 import { PageHead } from '@/components/page-head'
+import { Alert, AlertDescription } from '@/components/uikit'
 import { routes } from '@/lib/routes'
 import { practiceStats, useRandomPractice } from '@/stores/random-practice'
 
@@ -37,12 +38,14 @@ export const RandomPracticePage: React.FC = () => {
         <ArrowLeft className="size-3.5" aria-hidden="true" /> Усі теми
       </Link>
       {storageNotice && (
-        <p
+        <Alert
           role="status"
-          className="mb-5 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm"
+          className="mb-5 rounded-xl border-amber-500/30 bg-amber-500/10 p-4"
         >
-          {storageNotice}
-        </p>
+          <AlertDescription className="text-foreground">
+            {storageNotice}
+          </AlertDescription>
+        </Alert>
       )}
       {!session || !data ? (
         <PracticeEmptyState />

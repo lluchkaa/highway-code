@@ -34,7 +34,9 @@ test('draws from selected groups, saves answers and position, resumes, and resta
     }
   })
   await page.goto('./')
-  await page.getByRole('button', { name: 'Категорія BE', exact: true }).click()
+  await page
+    .getByRole('checkbox', { name: 'Категорія BE', exact: true })
+    .click()
   await page
     .getByRole('button', { name: 'Почати 20 питань', exact: true })
     .click()
@@ -90,8 +92,10 @@ test('draws from selected groups, saves answers and position, resumes, and resta
   ).toEqual({})
 
   await page.getByRole('link', { name: 'Усі теми', exact: true }).click()
-  await page.getByRole('button', { name: 'Категорія BE', exact: true }).click()
-  await page.getByRole('button', { name: 'Категорія A', exact: true }).click()
+  await page
+    .getByRole('checkbox', { name: 'Категорія BE', exact: true })
+    .click()
+  await page.getByRole('checkbox', { name: 'Категорія A', exact: true }).click()
   await page.getByRole('link', { name: 'Продовжити тест', exact: true }).click()
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
     initial.items[7].question.question_text,
@@ -194,7 +198,7 @@ test('keeps an existing session after a failed restart and can retry with a new 
   await expect(questionNavigation(page).getByRole('link')).toHaveCount(20)
   const initial = await session(page)
   await page.getByRole('link', { name: 'Усі теми', exact: true }).click()
-  await page.getByRole('button', { name: 'Категорія T', exact: true }).click()
+  await page.getByRole('checkbox', { name: 'Категорія T', exact: true }).click()
   await page.route('**/*-category.json', (route) => route.abort())
   await page
     .getByRole('button', { name: 'Нові 20 питань', exact: true })

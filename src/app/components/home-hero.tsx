@@ -7,7 +7,7 @@ type Props = { total: number }
 
 export const HomeHero: React.FC<Props> = ({ total }) => {
   return (
-    <div>
+    <div className="min-w-0">
       <Badge
         variant="secondary"
         className="mb-5 h-7 gap-1.5 px-3 text-[10px] font-semibold tracking-wider uppercase"

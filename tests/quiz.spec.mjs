@@ -332,15 +332,15 @@ test('selects multiple licences, deduplicates shared topics, and remembers the c
   await page.goto('./')
   const selector = page.getByRole('region', { name: 'Які категорії вивчаєш?' })
   const licence = (value) =>
-    selector.getByRole('button', { name: `Категорія ${value}`, exact: true })
+    selector.getByRole('checkbox', { name: `Категорія ${value}`, exact: true })
   await expect(
-    selector.getByRole('button', { name: /^Категорія / }),
+    selector.getByRole('checkbox', { name: /^Категорія / }),
   ).toHaveCount(14)
   await expect(page.getByRole('article')).toHaveCount(47)
 
   await licence('B').focus()
   await page.keyboard.press('Space')
-  await expect(licence('B')).toHaveAttribute('aria-pressed', 'true')
+  await expect(licence('B')).toBeChecked()
   await expect(page.getByRole('article')).toHaveCount(51)
   await expect(
     page.getByRole('region', { name: 'Категорії B1, B', exact: true }),
@@ -356,7 +356,7 @@ test('selects multiple licences, deduplicates shared topics, and remembers the c
   await expect(page.getByRole('article')).toHaveCount(59)
   await page.reload()
   for (const value of ['A1', 'A', 'B', 'BE']) {
-    await expect(licence(value)).toHaveAttribute('aria-pressed', 'true')
+    await expect(licence(value)).toBeChecked()
   }
   await expect(page.getByRole('article')).toHaveCount(59)
   await licence('B').click()
@@ -387,7 +387,7 @@ test('selects multiple licences, deduplicates shared topics, and remembers the c
     .getByRole('button', { name: 'Скинути пошук і фільтр', exact: true })
     .click()
   await expect(page.getByRole('article')).toHaveCount(51)
-  await expect(licence('B1')).toHaveAttribute('aria-pressed', 'true')
+  await expect(licence('B1')).toBeChecked()
 
   for (const width of [320, 390, 768, 1280]) {
     await page.setViewportSize({ width, height: 900 })
@@ -426,7 +426,7 @@ test('matches every licence family and includes base topics for trailer licences
   ]
   for (const family of families) {
     for (const value of family.licences) {
-      const toggle = selector.getByRole('button', {
+      const toggle = selector.getByRole('checkbox', {
         name: `Категорія ${value}`,
         exact: true,
       })
@@ -480,10 +480,10 @@ test('uses selected topics for progress and category transitions without losing 
   await expect(
     overview.getByText(String(totalGeneral), { exact: true }),
   ).toBeVisible()
-  await page.getByRole('button', { name: 'Категорія C', exact: true }).click()
+  await page.getByRole('checkbox', { name: 'Категорія C', exact: true }).click()
   await expect(overview.getByText('1', { exact: true })).toHaveCount(1)
-  await page.getByRole('button', { name: 'Категорія C', exact: true }).click()
-  await page.getByRole('button', { name: 'Категорія B', exact: true }).click()
+  await page.getByRole('checkbox', { name: 'Категорія C', exact: true }).click()
+  await page.getByRole('checkbox', { name: 'Категорія B', exact: true }).click()
 
   await page.goto(
     `./#/categories/46/questions/${String(generalEnd.questions.at(-1).id)}`,
@@ -526,7 +526,9 @@ test('recovers from malformed licence preferences', async ({ page }) => {
     }, value)
     await page.reload()
     await expect(page.getByRole('article')).toHaveCount(47)
-    await page.getByRole('button', { name: 'Категорія B', exact: true }).click()
+    await page
+      .getByRole('checkbox', { name: 'Категорія B', exact: true })
+      .click()
     await expect(page.getByRole('article')).toHaveCount(51)
   }
 })
@@ -631,11 +633,11 @@ test('keeps the quiz usable when localStorage is unavailable', async ({
     page.getByRole('heading', { name: 'Правильно! Так тримати.' }),
   ).toBeVisible()
   await page.getByRole('link', { name: 'Усі теми', exact: true }).click()
-  await page.getByRole('button', { name: 'Категорія B', exact: true }).click()
+  await page.getByRole('checkbox', { name: 'Категорія B', exact: true }).click()
   await expect(page.getByRole('article')).toHaveCount(51)
   await page.goto('./#/categories/0/questions/1')
   await page.getByRole('link', { name: 'Усі теми', exact: true }).click()
   await expect(
-    page.getByRole('button', { name: 'Категорія B', exact: true }),
-  ).toHaveAttribute('aria-pressed', 'true')
+    page.getByRole('checkbox', { name: 'Категорія B', exact: true }),
+  ).toBeChecked()
 })

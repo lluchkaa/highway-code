@@ -1,45 +1,60 @@
 import type * as React from 'react'
+import { PolarAngleAxis, RadialBar, RadialBarChart } from 'recharts'
+
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from '@/components/uikit'
+
+const chartConfig = { progress: { label: 'Пройдено', color: 'var(--primary)' } }
 
 type Props = { value: number; total: number }
 
 export const ProgressRing: React.FC<Props> = ({ value, total }) => {
-  const ratio = total === 0 ? 0 : value / total
-  const percentage = Math.round(ratio * 100)
-  const circumference = 2 * Math.PI * 45
+  const percentage =
+    total === 0 ? 0 : Math.round(Math.min(value / total, 1) * 100)
   return (
     <div
-      className="relative size-28 shrink-0"
+      className="relative size-24 shrink-0 sm:size-28"
       role="img"
-      aria-label={`Відповіді на ${String(percentage)}% питань`}
+      aria-label={`Відповіді на ${String(percentage)}% питань (${String(value)} із ${String(total)})`}
     >
-      <svg
-        viewBox="0 0 104 104"
-        className="size-full -rotate-90"
+      <ChartContainer
+        config={chartConfig}
+        className="aspect-square size-24 sm:size-28"
+        initialDimension={{ width: 112, height: 112 }}
+      >
+        <RadialBarChart
+          data={[{ progress: percentage, fill: 'var(--color-progress)' }]}
+          startAngle={90}
+          endAngle={-270}
+          innerRadius="78%"
+          outerRadius="100%"
+          accessibilityLayer={false}
+        >
+          <PolarAngleAxis type="number" domain={[0, 100]} tick={false} />
+          <RadialBar
+            dataKey="progress"
+            background
+            cornerRadius={8}
+            isAnimationActive={false}
+          />
+          <ChartTooltip
+            cursor={false}
+            content={
+              <ChartTooltipContent
+                hideLabel
+                formatter={() => `${String(value)} із ${String(total)} питань`}
+              />
+            }
+          />
+        </RadialBarChart>
+      </ChartContainer>
+      <div
+        className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center"
         aria-hidden="true"
       >
-        <circle
-          cx="52"
-          cy="52"
-          r="45"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="7"
-          className="text-primary/10"
-        />
-        <circle
-          cx="52"
-          cy="52"
-          r="45"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="7"
-          strokeLinecap="round"
-          strokeDasharray={circumference}
-          strokeDashoffset={circumference * (1 - Math.min(ratio, 1))}
-          className="text-primary transition-all duration-500"
-        />
-      </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span className="text-2xl font-semibold tracking-tight tabular-nums">
           {percentage}%
         </span>

@@ -1,5 +1,6 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
+  "ignoreIssues": { "src/components/uikit/**": ["exports", "types"] },
   "project": [
     "src/**/*.{ts,tsx,mts,cts,css}",
     "scripts/**/*.ts",

@@ -1,7 +1,13 @@
 import { Search } from 'lucide-react'
 import type * as React from 'react'
 
-import { Button, Input } from '@/components/uikit'
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  ToggleGroup,
+  ToggleGroupItem,
+} from '@/components/uikit'
 
 export type TopicFilter = 'all' | 'general' | 'extra'
 
@@ -31,12 +37,8 @@ export const TopicFilters: React.FC<Props> = ({
             З чого почнемо?
           </h2>
         </div>
-        <div className="relative w-full sm:max-w-72">
-          <Search
-            className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground"
-            aria-hidden="true"
-          />
-          <Input
+        <InputGroup className="h-11 w-full rounded-xl bg-card sm:max-w-72">
+          <InputGroupInput
             type="search"
             value={search}
             onChange={(event) => {
@@ -44,12 +46,26 @@ export const TopicFilters: React.FC<Props> = ({
             }}
             placeholder="Знайти тему…"
             aria-label="Знайти тему"
-            className="h-11 rounded-xl bg-card pr-3 pl-10"
+            className="h-full"
           />
-        </div>
+          <InputGroupAddon>
+            <Search aria-hidden="true" />
+          </InputGroupAddon>
+        </InputGroup>
       </div>
       <div className="mt-6 mb-9 flex flex-wrap items-center justify-between gap-4">
-        <div className="flex flex-wrap gap-2" aria-label="Фільтр тем">
+        <ToggleGroup
+          aria-label="Фільтр тем"
+          value={[filter]}
+          onValueChange={(values: unknown[]) => {
+            const [next] = values
+            if (next === 'all' || next === 'general' || next === 'extra') {
+              onFilter(next)
+            }
+          }}
+          variant="outline"
+          className="flex-wrap"
+        >
           {(
             [
               { id: 'all', label: 'Усі теми' },
@@ -57,19 +73,15 @@ export const TopicFilters: React.FC<Props> = ({
               { id: 'extra', label: 'Додаткові категорії' },
             ] as const
           ).map((item) => (
-            <Button
+            <ToggleGroupItem
               key={item.id}
-              variant={filter === item.id ? 'default' : 'outline'}
-              className="h-9 rounded-full px-4 text-xs"
-              aria-pressed={filter === item.id}
-              onClick={() => {
-                onFilter(item.id)
-              }}
+              className="h-9 rounded-full px-4 text-xs data-pressed:bg-primary data-pressed:text-primary-foreground"
+              value={item.id}
             >
               {item.label}
-            </Button>
+            </ToggleGroupItem>
           ))}
-        </div>
+        </ToggleGroup>
         <p className="text-xs text-muted-foreground" role="status">
           Знайдено тем:{' '}
           <span className="font-medium text-foreground">{count}</span>

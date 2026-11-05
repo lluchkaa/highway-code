@@ -1,5 +1,7 @@
-import { LoaderCircle, Route } from 'lucide-react'
+import { Route } from 'lucide-react'
 import type * as React from 'react'
+
+import { Spinner } from '@/components/uikit'
 
 export const RouteLoading: React.FC = () => {
   return (
@@ -12,7 +14,7 @@ export const RouteLoading: React.FC = () => {
           <Route className="size-8" aria-hidden="true" />
         </span>
         <p className="flex items-center gap-2 text-sm text-muted-foreground">
-          <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
+          <Spinner aria-hidden="true" />
           Готуємо питання…
         </p>
       </div>

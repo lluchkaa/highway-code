@@ -32,6 +32,14 @@ The `typescript` alias provides the TypeScript 6 API required by typescript-esli
   primitives in their original flat files and declaration style. Application code
   imports them through `@/components/uikit`, whose `index.ts` re-exports every
   primitive file. Generated primitives may import one another directly.
+- Generic controls and presentation use UIKit: Checkbox for licence selection,
+  ToggleGroup for topic filters, InputGroup for search, Card for panels, Alert for
+  feedback/storage notices, Empty for empty states, and Spinner for loading.
+  Answer choices use Button actions so choosing an answer still submits it
+  immediately. Preserve native navigation links with `buttonVariants`.
+- The home progress ring uses a generated Chart container and Recharts radial
+  chart. Its implementation loads separately from the rest of the page. Linear
+  progress indicators continue to use the generated Progress primitive.
 - CVA defines component variants. Tailwind Variants is intentionally omitted.
 - Import application code through `@/`, which resolves to `src/` in TypeScript
   and Vite.
@@ -206,8 +214,19 @@ The local `ui-style/component-style` ESLint rule enforces the declaration form,
 props name/placement, and one authored UI declaration per file. TSX functions are
 limited to 100 nonblank, noncomment lines, encouraging cohesive sections instead
 of large render functions. These custom UI rules exclude generated shadcn files;
-standard type, accessibility, import, and dependency checks still apply to them. Rule tests run with `pnpm test` through ESLint's
-RuleTester. Scratch downloads under `.ignore/` are excluded from lint/formatting.
+TypeScript checking and import/dependency rules still apply. The generated chart
+has scoped lint allowances for Recharts' polymorphic payload types; InputGroup's
+mouse-to-input focus delegation has scoped accessibility-lint allowances. The
+source is otherwise kept in generator form. Rule tests run with `pnpm test`
+through ESLint's RuleTester. Scratch downloads under `.ignore/` are excluded from lint/formatting.
+
+Application code must import primitives from `@/components/uikit`; direct Base UI
+imports and deep UIKit imports are rejected outside generated files. Native
+`button`, `input`, `select`, `textarea`, `progress`, and `dialog` JSX is rejected in
+application code so shared controls own their behavior. Semantic HTML and SVG
+remain available for application content. Browser local/session storage access is
+restricted to `src/stores/persistence`; behavior tests can access storage directly.
+These rules live in `eslint/ui-policy.js` and have RuleTester coverage.
 
 ESLint uses the recommended JavaScript, strict type-aware TypeScript, React Hooks,
 Vite React Refresh, and JSX accessibility rules. It requires braces, strict
@@ -241,14 +260,17 @@ formatted and checked alongside other supported project files.
 
 Knip follows the Vite app entry and tool configuration to find unused source files,
 exports, and dependencies. Its project scope covers source modules/styles and root
-tooling modules. It has no speculative entry points or unused-dependency exceptions.
+tooling modules. Generated UIKit export/type surfaces are retained intact and
+excluded from unused-export reports; application exports, unused files, and all
+dependencies remain checked. There are no speculative entry points or
+unused-dependency exceptions.
 Import `cn` directly from its package; install icon dependencies when UI uses them.
 The utility alias and icon-library setting in `components.json` configure future
 generator output; they do not require an unused utility file or icon dependency.
 Style navigation links with shadcn's `buttonVariants`; Base UI `Button` is reserved
 for actions so links retain their native keyboard behavior and accessible role.
-The button primitive permits `buttonVariants` alongside its UI export in the
-React Refresh rule. The UIKit index re-exports the generated primitive files.
+Button and Toggle permit their generated variant exports alongside UI exports
+in the React Refresh rule. The UIKit index re-exports the generated primitive files.
 
 Vitest discovers `src/**/*.test.ts` and exercises persistence, progress summaries,
 and loaders through their module interfaces. `pnpm test` also runs the local ESLint

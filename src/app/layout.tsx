@@ -1,9 +1,10 @@
-import { LoaderCircle, TriangleAlert } from 'lucide-react'
+import { TriangleAlert } from 'lucide-react'
 import type * as React from 'react'
 import { Outlet, useNavigation } from 'react-router'
 
 import { AppFooter } from '@/app/components/app-footer'
 import { AppHeader } from '@/app/components/app-header'
+import { Alert, AlertDescription, Spinner } from '@/components/uikit'
 import { useProgress } from '@/stores/progress'
 
 export const AppLayout: React.FC = () => {
@@ -27,22 +28,21 @@ export const AppLayout: React.FC = () => {
           className="fixed top-0 right-0 left-0 z-50 flex items-center justify-center gap-2 bg-primary px-4 py-2 text-xs text-primary-foreground"
           role="status"
         >
-          <LoaderCircle className="size-3.5 animate-spin" aria-hidden="true" />
+          <Spinner className="size-3.5" aria-hidden="true" />
           Завантажуємо питання…
         </div>
       )}
       {storageNotice && (
         <div className="mx-auto mt-5 w-full max-w-6xl px-4 sm:px-6">
-          <div
-            className="flex items-start gap-3 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-foreground"
+          <Alert
             role="status"
+            className="rounded-xl border-amber-500/30 bg-amber-500/10 p-4 text-foreground"
           >
-            <TriangleAlert
-              className="mt-0.5 size-4 shrink-0"
-              aria-hidden="true"
-            />
-            <p>{storageNotice}</p>
-          </div>
+            <TriangleAlert aria-hidden="true" />
+            <AlertDescription className="text-foreground">
+              {storageNotice}
+            </AlertDescription>
+          </Alert>
         </div>
       )}
       <div id="main-content" tabIndex={-1} className="flex-1 outline-none">

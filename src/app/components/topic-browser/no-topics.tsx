@@ -1,25 +1,38 @@
 import { ArrowRight, SearchX } from 'lucide-react'
 import type * as React from 'react'
 
-import { Button } from '@/components/uikit'
+import {
+  Button,
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/uikit'
 
 type Props = { onReset: () => void }
 
 export const NoTopics: React.FC<Props> = ({ onReset }) => {
   return (
-    <div className="flex flex-col items-center rounded-2xl border border-dashed border-border py-16 text-center">
-      <SearchX
-        className="mb-4 size-8 text-muted-foreground"
-        aria-hidden="true"
-      />
-      <h3 className="font-semibold">Такої теми не знайшли</h3>
-      <p className="mt-2 px-4 text-sm text-muted-foreground">
-        Спробуй іншу назву, зміни фільтр або обрані категорії посвідчення.
-      </p>
-      <Button variant="link" className="mt-4" onClick={onReset}>
-        Скинути пошук і фільтр
-        <ArrowRight aria-hidden="true" />
-      </Button>
-    </div>
+    <Empty className="border border-border py-16">
+      <EmptyHeader>
+        <EmptyMedia>
+          <SearchX className="size-8 text-primary" aria-hidden="true" />
+        </EmptyMedia>
+        <EmptyTitle>
+          <h3 className="font-semibold">Такої теми не знайшли</h3>
+        </EmptyTitle>
+        <EmptyDescription>
+          Спробуй іншу назву, зміни фільтр або обрані категорії посвідчення.
+        </EmptyDescription>
+      </EmptyHeader>
+      <EmptyContent>
+        <Button variant="link" onClick={onReset}>
+          Скинути пошук і фільтр
+          <ArrowRight aria-hidden="true" />
+        </Button>
+      </EmptyContent>
+    </Empty>
   )
 }

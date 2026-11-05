@@ -1,16 +1,8 @@
 import { cn } from 'cn'
-import {
-  Bike,
-  Bus,
-  Caravan,
-  CarFront,
-  Check,
-  TramFront,
-  Truck,
-} from 'lucide-react'
+import { Bike, Bus, Caravan, CarFront, TramFront, Truck } from 'lucide-react'
 import type * as React from 'react'
 
-import { Button } from '@/components/uikit'
+import { Checkbox } from '@/components/uikit'
 import {
   type Licence,
   licenceGroups,
@@ -52,28 +44,29 @@ export const LicenceGroup: React.FC<Props> = ({
         {options.map((licence) => {
           const selected = licences.includes(licence)
           return (
-            <Button
+            <label
               key={licence}
-              aria-label={`Категорія ${licence}`}
-              aria-pressed={selected}
-              variant={selected ? 'default' : 'outline'}
               className={cn(
-                'h-11 min-w-16 gap-2 rounded-lg px-3 text-sm',
-                !selected && 'bg-card',
+                'flex min-h-11 min-w-16 cursor-pointer items-center gap-2 rounded-lg border px-3 text-sm transition-colors has-[:focus-visible]:ring-3 has-[:focus-visible]:ring-ring/50',
+                selected
+                  ? 'border-primary bg-primary text-primary-foreground'
+                  : 'border-input bg-card hover:bg-muted',
               )}
-              onClick={() => {
-                onChange(
-                  selected
-                    ? licences.filter((item) => item !== licence)
-                    : [...licences, licence],
-                )
-              }}
             >
-              <span className="grid size-3.5 place-items-center rounded-sm border border-current/40">
-                {selected && <Check className="size-3" aria-hidden="true" />}
-              </span>
+              <Checkbox
+                aria-label={`Категорія ${licence}`}
+                checked={selected}
+                onCheckedChange={(checked) => {
+                  onChange(
+                    checked
+                      ? [...licences, licence]
+                      : licences.filter((item) => item !== licence),
+                  )
+                }}
+                className="data-checked:border-primary-foreground/60"
+              />
               {licence}
-            </Button>
+            </label>
           )
         })}
       </div>
