@@ -201,8 +201,12 @@ test('uses the question bar, advances to the next category, and handles missing 
     categoryB.questions[0].question_text,
   )
 
+  const unexplainedQuestion = categoryC.questions.find(
+    (question) => question.explanation === null,
+  )
+  expect(unexplainedQuestion).toBeDefined()
   await page.goto(
-    `./#/categories/55/questions/${String(categoryC.questions[0].id)}`,
+    `./#/categories/55/questions/${String(unexplainedQuestion.id)}`,
   )
   await answers(page).first().click()
   await expect(

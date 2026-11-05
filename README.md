@@ -133,12 +133,20 @@ the source data:
 pnpm catalog:generate
 ```
 
+Question imports add missing explanations and append new questions to the existing
+topics while preserving existing question IDs, answers, and option order. New
+question images are stored locally and mapped in the asset manifest. Source
+metadata, raw snapshots, and import reports remain in the ignored `.ignore/`
+directory. Published question data excludes source attribution and video links.
+Explanation images, when present, use
+`<question-position>_ans_<image-index>.<ext>` filenames beside the question images.
+
 The generator shares Zod schemas with the app. It checks category counts, answer
 indexes, distinct options, unique question IDs, and local image mappings/files.
 `catalog:check` verifies the committed catalog matches the source; development,
 production builds, and `check` fail if it is stale. Answer and question order are
 preserved because some answers refer to other options by number. Scraped `status`
-and `is_pro` fields never initialize progress or restrict access.
+fields never initialize progress or restrict access.
 
 React Router data loaders fetch and validate the catalog at the root and preload
 the selected category before rendering a question. Question JSON and local image
