@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { Licence } from '@/lib/licence-categories'
 import { routes } from '@/lib/routes'
+import { memoryStorage } from '@/test/storage'
 
 import manifestData from '../../public/assets/questions/asset-manifest.json'
 import catalogData from '../../public/assets/questions/catalog.json'
@@ -28,16 +29,7 @@ function loaderArgs(
 beforeEach(() => {
   vi.resetModules()
   vi.stubEnv('BASE_URL', '/highway-code/')
-  const values = new Map<string, string>()
-  const storage = {
-    getItem: (key: string) => values.get(key) ?? null,
-    setItem: (key: string, value: string) => {
-      values.set(key, value)
-    },
-    removeItem: (key: string) => {
-      values.delete(key)
-    },
-  }
+  const storage = memoryStorage()
   vi.stubGlobal('window', { sessionStorage: storage, localStorage: storage })
   vi.stubGlobal(
     'fetch',
@@ -73,11 +65,10 @@ describe('random practice routing', () => {
   ])(
     'draws 20 unique questions only from the selected groups: $licences',
     async ({ licences, groups }) => {
-      const { learningStore } = await import('@/stores/learning-store')
-      const { randomPracticeStore } =
-        await import('@/stores/random-practice-store')
-      const { progressStore } = await import('@/stores/progress-store')
-      const { startRandomPractice } = await import('@/lib/random-practice')
+      const { learningStore } = await import('@/stores/learning')
+      const { randomPracticeStore } = await import('@/stores/random-practice')
+      const { progressStore } = await import('@/stores/progress')
+      const { startRandomPractice } = await import('@/app/practice/action')
       learningStore.getState().setLicences(licences)
       const result = await startRandomPractice(loaderArgs())
       expect(result.headers.get('Location')).toBe('/practice?question=1')
@@ -107,9 +98,8 @@ describe('random practice routing', () => {
   )
 
   it('redraws questions on restart and keeps the previous set if generation is cancelled', async () => {
-    const { randomPracticeStore } =
-      await import('@/stores/random-practice-store')
-    const { startRandomPractice } = await import('@/lib/random-practice')
+    const { randomPracticeStore } = await import('@/stores/random-practice')
+    const { startRandomPractice } = await import('@/app/practice/action')
     const random = vi.spyOn(Math, 'random').mockReturnValue(0)
     await startRandomPractice(loaderArgs())
     const original = randomPracticeStore.getState().session
@@ -129,10 +119,9 @@ describe('random practice routing', () => {
   })
 
   it('resumes the saved position, remembers the result page, and validates question links', async () => {
-    const { randomPracticeStore } =
-      await import('@/stores/random-practice-store')
-    const { startRandomPractice, randomPracticeLoader } =
-      await import('@/lib/random-practice')
+    const { randomPracticeStore } = await import('@/stores/random-practice')
+    const { startRandomPractice } = await import('@/app/practice/action')
+    const { randomPracticeLoader } = await import('@/app/practice/loader')
     expect(await randomPracticeLoader(loaderArgs())).toBeNull()
     await startRandomPractice(loaderArgs())
     expect(
@@ -158,10 +147,9 @@ describe('random practice routing', () => {
   })
 
   it('invalidates a session if its source content revision has changed', async () => {
-    const { randomPracticeStore } =
-      await import('@/stores/random-practice-store')
-    const { startRandomPractice, randomPracticeLoader } =
-      await import('@/lib/random-practice')
+    const { randomPracticeStore } = await import('@/stores/random-practice')
+    const { startRandomPractice } = await import('@/app/practice/action')
+    const { randomPracticeLoader } = await import('@/app/practice/loader')
     await startRandomPractice(loaderArgs())
     const session = randomPracticeStore.getState().session
     if (!session) {

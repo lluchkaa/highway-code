@@ -2,7 +2,7 @@ import { useStore } from 'zustand'
 
 import { useCatalog } from '@/hooks/use-catalog'
 import { learningCategories } from '@/lib/licence-categories'
-import { learningStore } from '@/stores/learning-store'
+import { learningStore } from '@/stores/learning'
 
 export function useLearningCategories() {
   const catalog = useCatalog()

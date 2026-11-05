@@ -28,13 +28,44 @@ The `typescript` alias provides the TypeScript 6 API required by typescript-esli
 - Tailwind CSS 4 runs through `@tailwindcss/vite`; global styles and shadcn theme
   tokens live in `src/index.css`.
 - shadcn/ui uses Base UI, the Nova style, and a neutral theme. Components live in
-  `src/components/uikit`; `components.json` configures the generator.
+  `src/components/uikit`; `components.json` configures the generator. Keep generated
+  primitives in their original flat files and declaration style. Application code
+  imports them through `@/components/uikit`, whose `index.ts` re-exports every
+  primitive file. Generated primitives may import one another directly.
 - CVA defines component variants. Tailwind Variants is intentionally omitted.
 - Import application code through `@/`, which resolves to `src/` in TypeScript
   and Vite.
-- Zustand stores live in `src/stores`; application hooks live in `src/hooks` and
-  components in `src/components`. The progress store uses Zustand's `persist`
-  middleware with Zod-validated localStorage under `highway-code:progress`.
+- Pages live in `src/app`: `page.tsx` is a route entry, `layout.tsx` is the
+  application shell, and `router.tsx` explicitly registers the React Router hash
+  routes. This is an App Router-style folder convention within the Vite app.
+  Page loaders/actions live beside their page. Home-only UI lives under
+  `src/app/components`; child pages own their `components` folders.
+- Keep page entries focused on composition. Split substantial sections and their
+  state/effects into small, cohesive files. Related UI lives in a nested folder
+  with explicit named exports in `index.ts` when the folder groups multiple
+  implementation files. A standalone implementation needs no wrapper folder or
+  `index.ts`; import its file directly. Internal files import each other through
+  `@/`. Callers use a grouped folder's export. Route entries are imported
+  directly so each page remains lazy-loaded. Share UI under `src/components` when
+  it has multiple callers; primitives remain in `src/components/uikit` with the
+  generator settings in `components.json` preserved.
+- Authored UI uses one declaration per file, a local `type Props` immediately above
+  `const Name: React.FC<Props> = (...) => { ... }`, and explicit type-only React
+  imports. No-input declarations use `React.FC` without an empty props type.
+  Generated shadcn primitives in `src/components/uikit` retain their original
+  declarations and are exempt from the custom declaration and function-size rules.
+- Zustand modules live in `src/stores`. Group a store's state hooks, summaries,
+  and tests in a named folder; standalone stores stay single files. Progress and
+  random-practice hooks require selectors so callers subscribe only to the state
+  they use. Topic summaries count answers once per
+  immutable answer snapshot; cards and selected-topic totals share those counts.
+  Route-dependent composition hooks live in `src/hooks`.
+- `src/stores/persistence/storage.ts` supplies validated JSON persistence for local/session
+  storage and injected test storage. The factory accepts a storage target,
+  default-value factory, Zod envelope schema, and optional recovery/failure
+  notices. Browser access, serialization, fallback, and deferred failure
+  notifications live there; stores own their domain validation, partial recovery,
+  and actions. Topic progress uses `highway-code:progress` in localStorage.
 - The theme selector defaults to System and offers Light and Dark overrides.
   `useTheme` and `useThemeSync` use a Zustand store whose preference is validated
   with Zod and persisted under `highway-code:theme`. System mode follows changes
@@ -47,6 +78,10 @@ Add shadcn components as needed:
 ```sh
 pnpm exec shadcn add dialog
 ```
+
+After adding a primitive, add its export to `src/components/uikit/index.ts` and
+run the standard checks. Keep `components.json` unchanged when reorganizing
+application UI.
 
 ## Quiz data and behavior
 
@@ -124,7 +159,7 @@ there is no cross-device sync.
 React Router 8 uses hash URLs such as
 `/highway-code/#/categories/1/questions/608`, with stable source question IDs.
 Copied links and refreshes work on GitHub Pages without a server rewrite.
-The router is created only in `src/components/app-router.tsx`; route patterns
+The router is created only in `src/app/router.tsx`; route patterns
 and link builders live in `src/lib/routes.ts`. On a host with SPA rewrites,
 replace `createHashRouter` with `createBrowserRouter` there and set its `basename`
 to `import.meta.env.BASE_URL`. No question or category link needs to change.
@@ -144,7 +179,7 @@ outside the current scope.
 | `pnpm typecheck`        | Check the app and Vite config with TypeScript                       |
 | `pnpm catalog:generate` | Generate the category metadata catalog                              |
 | `pnpm catalog:check`    | Validate question data, assets, and catalog freshness               |
-| `pnpm test`             | Run progress and route-loader tests with Vitest                     |
+| `pnpm test`             | Run Vitest behavior tests and ESLint rule tests                     |
 | `pnpm test:e2e`         | Run browser behavior tests against a production build               |
 | `pnpm knip`             | Find unused files, exports, and dependencies                        |
 | `pnpm check`            | Validate data, formatting, lint, types, unused code, and unit tests |
@@ -158,6 +193,13 @@ Git enforces LF checkouts for text files through `.gitattributes`. Local environ
 files, coverage output, and TypeScript build metadata are ignored by Git;
 `.env.example` can be committed as a template.
 The Tailwind Prettier plugin sorts utility classes, including `cn` and `cva` calls.
+
+The local `ui-style/component-style` ESLint rule enforces the declaration form,
+props name/placement, and one authored UI declaration per file. TSX functions are
+limited to 100 nonblank, noncomment lines, encouraging cohesive sections instead
+of large render functions. These custom UI rules exclude generated shadcn files;
+standard type, accessibility, import, and dependency checks still apply to them. Rule tests run with `pnpm test` through ESLint's
+RuleTester. Scratch downloads under `.ignore/` are excluded from lint/formatting.
 
 ESLint uses the recommended JavaScript, strict type-aware TypeScript, React Hooks,
 Vite React Refresh, and JSX accessibility rules. It requires braces, strict
@@ -174,8 +216,11 @@ Imports are grouped as Node builtins, external packages, `@/` application code,
 relative code, and assets, then alphabetized without case sensitivity. Named
 imports are sorted too. Inline type imports are preferred. ESLint rejects
 duplicate imports, self-imports, and runtime dependency cycles. It preserves
-side-effect import order, including CSS. Shared UI primitives cannot import stores
-or application entry points; stores cannot import UI or application entry points.
+side-effect import order, including CSS. Shared UI cannot import page-local
+implementation. UI primitives cannot import
+application state, hooks, page entries, or shared application UI. Stores cannot
+import UI, route-dependent hooks, or application entry points. Root-page UI,
+random practice, and topic practice cannot import one another's private UI.
 These restrictions resolve paths, so aliases and relative imports are both checked.
 
 Accessibility lint uses `eslint-plugin-jsx-a11y-x`, which supports ESLint 10, and
@@ -194,11 +239,13 @@ The utility alias and icon-library setting in `components.json` configure future
 generator output; they do not require an unused utility file or icon dependency.
 Style navigation links with shadcn's `buttonVariants`; Base UI `Button` is reserved
 for actions so links retain their native keyboard behavior and accessible role.
-The button primitive permits the generator's `buttonVariants` export alongside
-the component in the React Refresh rule.
+The button primitive permits `buttonVariants` alongside its UI export in the
+React Refresh rule. The UIKit index re-exports the generated primitive files.
 
-Vitest discovers `src/**/*.test.ts` and exercises persistence and loaders through
-their module interfaces. Playwright covers direct links, immediate feedback,
+Vitest discovers `src/**/*.test.ts` and exercises persistence, progress summaries,
+and loaders through their module interfaces. `pnpm test` also runs the local ESLint
+rule tests with Node's test runner. Playwright covers direct links, immediate
+feedback,
 explanations, retry/resume, category transitions, reset confirmation, data-load
 recovery, unavailable storage, responsive layout, and system dark mode. Run it
 after building:

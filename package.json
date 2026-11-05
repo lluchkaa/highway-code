@@ -13,7 +13,7 @@
     "build": "pnpm catalog:check && tsc -b && vite build",
     "catalog:generate": "node scripts/generate-catalog.ts",
     "catalog:check": "node scripts/generate-catalog.ts --check",
-    "test": "vitest run",
+    "test": "vitest run && node --test eslint/*.test.js",
     "test:e2e": "playwright test",
     "lint": "eslint . --max-warnings=0",
     "lint:fix": "eslint . --fix --max-warnings=0",

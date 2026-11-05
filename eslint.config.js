@@ -9,8 +9,10 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
 
+import uiStyle from './eslint/ui-style.js'
+
 export default defineConfig([
-  globalIgnores(['dist', 'dist-ssr', 'coverage', '.husky/_']),
+  globalIgnores(['dist', 'dist-ssr', 'coverage', '.husky/_', '.ignore']),
   {
     linterOptions: {
       reportUnusedDisableDirectives: 'error',
@@ -133,14 +135,56 @@ export default defineConfig([
           basePath: import.meta.dirname,
           zones: [
             {
+              target: './src/components',
+              from: './src/app',
+              message: 'Shared UI must not import page-local implementation.',
+            },
+            {
               target: './src/components/uikit',
-              from: ['./src/stores', './src/App.tsx', './src/main.tsx'],
+              from: './src/components',
+              except: ['./uikit'],
+              message:
+                'UI primitives must not depend on shared application UI.',
+            },
+            {
+              target: './src/app/components',
+              from: ['./src/app/practice', './src/app/categories'],
+              message:
+                'Root-page UI must not depend on child-page implementation.',
+            },
+            {
+              target: './src/app/practice',
+              from: ['./src/app/components', './src/app/categories'],
+              message:
+                'Practice must use shared UI rather than another page’s implementation.',
+            },
+            {
+              target: './src/app/categories',
+              from: ['./src/app/components', './src/app/practice'],
+              message:
+                'Topic practice must use shared UI rather than another page’s implementation.',
+            },
+            {
+              target: './src/components/uikit',
+              from: [
+                './src/app',
+                './src/stores',
+                './src/hooks',
+                './src/App.tsx',
+                './src/main.tsx',
+              ],
               message:
                 'Shared UI primitives must not depend on application state or entry points.',
             },
             {
               target: './src/stores',
-              from: ['./src/components', './src/App.tsx', './src/main.tsx'],
+              from: [
+                './src/app',
+                './src/components',
+                './src/hooks',
+                './src/App.tsx',
+                './src/main.tsx',
+              ],
               message:
                 'Stores must not depend on UI or application entry points.',
             },
@@ -152,13 +196,26 @@ export default defineConfig([
   {
     files: ['src/**/*.tsx'],
     extends: [jsxA11y.configs.recommended],
+    plugins: { 'ui-style': uiStyle },
     rules: {
       'jsx-a11y-x/control-has-associated-label': 'error',
+      'ui-style/component-style': 'error',
+      'max-lines-per-function': [
+        'error',
+        { max: 100, skipBlankLines: true, skipComments: true },
+      ],
     },
     settings: {
       'jsx-a11y-x': {
         components: { Button: 'button' },
       },
+    },
+  },
+  {
+    files: ['src/components/uikit/**/*.tsx'],
+    rules: {
+      'ui-style/component-style': 'off',
+      'max-lines-per-function': 'off',
     },
   },
   {

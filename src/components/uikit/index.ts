@@ -1,0 +1,6 @@
+export * from '@/components/uikit/alert-dialog'
+export * from '@/components/uikit/badge'
+export * from '@/components/uikit/button'
+export * from '@/components/uikit/input'
+export * from '@/components/uikit/progress'
+export * from '@/components/uikit/select'

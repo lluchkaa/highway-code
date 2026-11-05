@@ -5,7 +5,7 @@ import {
   type CategorySummary,
   localCategorySchema,
 } from '@/lib/quiz-schema'
-import { progressStore } from '@/stores/progress-store'
+import { progressStore } from '@/stores/progress'
 
 const cache = new Map<number, { revision: string; category: Category }>()
 let imagePaths: Map<string, string> | undefined

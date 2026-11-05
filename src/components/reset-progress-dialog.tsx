@@ -1,4 +1,5 @@
 import { RotateCcw } from 'lucide-react'
+import type * as React from 'react'
 import { useState } from 'react'
 
 import {
@@ -12,18 +13,20 @@ import {
   AlertDialogMedia,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/uikit/alert-dialog'
-import { Button } from '@/components/uikit/button'
+  Button,
+} from '@/components/uikit'
 
-export function ResetProgressDialog({
-  scope,
-  disabled = false,
-  onReset,
-}: {
+type Props = {
   scope: 'category' | 'all'
   disabled?: boolean
   onReset: () => void
-}) {
+}
+
+export const ResetProgressDialog: React.FC<Props> = ({
+  scope,
+  disabled = false,
+  onReset,
+}) => {
   const [open, setOpen] = useState(false)
   const all = scope === 'all'
   const label = all ? 'Скинути весь прогрес' : 'Скинути прогрес теми'

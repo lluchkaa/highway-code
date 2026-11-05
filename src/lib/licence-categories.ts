@@ -48,3 +48,29 @@ export function learningCategories(
   ])
   return catalog.filter((category) => groups.has(category.group))
 }
+
+export const categoryGroups: {
+  id: CategoryGroup
+  label: string
+  description: string
+}[] = [
+  {
+    id: 'general',
+    label: 'Основні теми',
+    description: 'Правила, знаки та безпека руху',
+  },
+  { id: 'A', label: 'Категорії A1, A', description: 'Мопеди та мотоцикли' },
+  {
+    id: 'B',
+    label: 'Категорії B1, B',
+    description: 'Легкові автомобілі та квадроцикли',
+  },
+  { id: 'C', label: 'Категорії C1, C', description: 'Вантажні автомобілі' },
+  { id: 'D', label: 'Категорії D1, D', description: 'Автобуси' },
+  {
+    id: 'E',
+    label: 'Категорії з причепом',
+    description: 'BE, C1E, CE, D1E, DE',
+  },
+  { id: 'T', label: 'Категорія T', description: 'Трамваї та тролейбуси' },
+]

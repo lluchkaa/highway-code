@@ -5,3 +5,5 @@ coverage/
 .husky/_/
 pnpm-lock.yaml
 *.tsbuildinfo
+
+.ignore/

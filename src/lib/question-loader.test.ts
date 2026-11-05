@@ -79,7 +79,8 @@ describe('route data loading', () => {
 
   it('preloads a question, maps its local image, and preserves source answer order', async () => {
     const fetchMock = mockFiles()
-    const { questionLoader } = await import('@/lib/question-loader')
+    const { questionLoader } =
+      await import('@/app/categories/[categoryId]/questions/[questionId]/loader')
     const data = await questionLoader(loaderArgs())
     expect(data.question.options).toEqual(categoryData.questions[0]?.options)
     expect(data.question.image_url).toBe('images/0-category/1_1.jpg')
@@ -100,7 +101,8 @@ describe('route data loading', () => {
     'rejects invalid route parameters %s / %s',
     async (categoryId, questionId) => {
       mockFiles()
-      const { questionLoader } = await import('@/lib/question-loader')
+      const { questionLoader } =
+        await import('@/app/categories/[categoryId]/questions/[questionId]/loader')
       await expect(
         questionLoader(loaderArgs(categoryId, questionId)),
       ).rejects.toMatchObject({ status: 404 })
@@ -114,7 +116,8 @@ describe('route data loading', () => {
         questions: [{ ...categoryData.questions[0], correct_answer: 99 }],
       },
     })
-    const { questionLoader } = await import('@/lib/question-loader')
+    const { questionLoader } =
+      await import('@/app/categories/[categoryId]/questions/[questionId]/loader')
     await expect(questionLoader(loaderArgs())).rejects.toThrow()
   })
 
@@ -129,7 +132,8 @@ describe('route data loading', () => {
         ),
       },
     })
-    const { questionLoader } = await import('@/lib/question-loader')
+    const { questionLoader } =
+      await import('@/app/categories/[categoryId]/questions/[questionId]/loader')
     await expect(questionLoader(loaderArgs())).rejects.toThrow('does not match')
   })
 
@@ -143,7 +147,8 @@ describe('route data loading', () => {
 
   it('fails clearly when an image mapping is missing', async () => {
     mockFiles({ 'asset-manifest.json': { complete: true, assets: [] } })
-    const { questionLoader } = await import('@/lib/question-loader')
+    const { questionLoader } =
+      await import('@/app/categories/[categoryId]/questions/[questionId]/loader')
     await expect(questionLoader(loaderArgs())).rejects.toThrow(
       'Missing local image',
     )

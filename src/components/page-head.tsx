@@ -1,10 +1,11 @@
-export function PageHead({
-  title,
-  description,
-}: {
+import type * as React from 'react'
+
+type Props = {
   title: string
   description: string
-}) {
+}
+
+export const PageHead: React.FC<Props> = ({ title, description }) => {
   const pageTitle = `${title} · ПДР Практика`
   return (
     <>

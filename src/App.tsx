@@ -1,7 +1,9 @@
-import { AppRouter } from '@/components/app-router'
-import { useThemeSync } from '@/hooks/use-theme'
+import type * as React from 'react'
 
-function App() {
+import { AppRouter } from '@/app/router'
+import { useThemeSync } from '@/stores/theme'
+
+const App: React.FC = () => {
   useThemeSync()
   return <AppRouter />
 }

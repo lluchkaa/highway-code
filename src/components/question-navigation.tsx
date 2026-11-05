@@ -1,15 +1,15 @@
 import { cn } from 'cn'
 import { Check, X } from 'lucide-react'
+import type * as React from 'react'
 import { useEffect, useRef } from 'react'
 import { Link } from 'react-router'
 
-export function QuestionNavigation({
-  items,
-  position,
-}: {
+type Props = {
   items: { to: string; correct: boolean | undefined }[]
   position: number
-}) {
+}
+
+export const QuestionNavigation: React.FC<Props> = ({ items, position }) => {
   const activeRef = useRef<HTMLAnchorElement>(null)
   useEffect(() => {
     activeRef.current?.scrollIntoView({ block: 'nearest', inline: 'center' })
